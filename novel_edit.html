@@ -34,34 +34,70 @@
       <!-- 右侧：功能区 -->
       <div class="col-lg-5 col-12">
         <div class="side-section h-100">
-          <!-- 元素1：可拖动排序列表 -->
+          <!-- 新增元素：本章细纲 -->
           <div>
-            <div class="mb-2 fw-bold">本章剧情列表（可拖动排序）</div>
-            <div id="sortableList" class="sortable-list mb-2">
-              <!-- 动态生成 -->
+            <div class="mb-4">
+                <h4 class="fw-bold mb-0">本章细纲：</h4>
+              </div>
+            <div class="mb-3" id="chapterOutline" style="background:#fafbfc; border:1px solid #eee; border-radius:8px; padding:12px;">
+              这是本章的细纲内容，可以在这里展示章节的主要结构或要点。
             </div>
-            <div class="text-end">
-              <button class="btn btn-success btn-sm" id="aiGenChapterBtn"><i class="fa-solid fa-robot"></i> AI生成本章内容</button>
-            </div>
+            <div class="alert alert-warning d-flex align-items-center justify-content-between" style="border-radius:8px;">
+  <div>
+    <strong>提示：</strong>本章细纲不存在，会影响AI推荐的剧情走向的质量，也会影响AI本章内容的质量。
+  </div>
+  <div class="ms-3">
+    <button class="btn btn-sm btn-primary me-2">编辑</button>
+    <button class="btn btn-sm btn-success">去生成</button>
+  </div>
+</div>
           </div>
-          <!-- 元素2：输入框+确定按钮 -->
-          <div>
-            <div class="mb-2 fw-bold">自定义剧情</div>
-            <div class="input-group">
-              <input type="text" id="fragmentInput" class="form-control" placeholder="输入片段内容">
-              <button id="addFragmentBtn" class="btn btn-primary">确定</button>
-            </div>
-          </div>
-          <!-- 元素3：选择列表 -->
-          <div>
-            <div class="mb-2 fw-bold">AI推荐剧情</div>
-            <div id="selectList" class="select-list">
-              <!-- 动态生成 -->
+          <!-- 元素1+2+3合并为一个卡片 -->
+                <h4 class="fw-bold mb-0">本章剧情配置：</h4>
+          <div class="card mb-3" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #eee;">
+            <div class="card-body" style="padding: 20px;">
+              <!-- 新增卡片大标题 -->
+              
+              <!-- 元素1：可拖动排序列表 -->
+              <div>
+                <div class="mb-2 fw-bold">本章剧情列表（可拖动排序）</div>
+                <div id="sortableList" class="sortable-list mb-2">
+                  <!-- 动态生成 -->
+                </div>
+              </div>
+              <!-- 元素2：输入框+确定按钮 -->
+              <div>
+                <div class="mb-2 fw-bold">自定义剧情</div>
+                <div class="input-group mb-3">
+                  <input type="text" id="fragmentInput" class="form-control" placeholder="输入片段内容">
+                  <button id="addFragmentBtn" class="btn btn-primary">确定</button>
+                </div>
+              </div>
+              <!-- 元素3：选择列表 -->
+              <div>
+                <div class="mb-2 fw-bold">AI推荐剧情
+                  <button>重新生成</button>
+                </div>
+                
+                <div id="selectList" class="select-list">
+                  <!-- 动态生成 -->
+                </div>
+              </div>
             </div>
           </div>
           <!-- 新增底部AI生成按钮 -->
-          <div class="mt-auto">
-            <button class="btn btn-success w-100" id="aiGenChapterBtn"><i class="fa-solid fa-robot"></i> AI生成本章内容</button>
+          <div class="d-flex mt-auto align-items-center gap-2">
+            <span 
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title="AI会根据本章细纲，以及上方的剧情走向（按顺序）生成本章情节。"
+                style="cursor: pointer;"
+              >
+                <i class="fa-solid fa-circle-question text-secondary"></i>
+              </span>
+            <button class="btn btn-success w-100" id="aiGenChapterBtn">
+              <i class="fa-solid fa-robot"></i> AI生成本章内容
+            </button>
           </div>
         </div>
       </div>
@@ -132,6 +168,14 @@
         fragments.splice(evt.newIndex, 0, removed);
         renderSortableList();
       }
+    });
+
+    // 启用所有 tooltip
+    document.addEventListener('DOMContentLoaded', function () {
+      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+        new bootstrap.Tooltip(tooltipTriggerEl);
+      });
     });
 
     // 初始化
