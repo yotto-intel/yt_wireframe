@@ -54,9 +54,12 @@
 
   <!-- Sidebar -->
   <aside class="sidebar">
-    <button class="btn btn-outline-primary btn-setting"><i class="fa-solid fa-gear"></i> 设置</button>
+    <div style="display: flex; flex-direction: row;margin-bottom: 10px;">
+      <button class="btn btn-outline-primary"><i class="fa-solid fa-gear"></i> 设置</button>
+      <button class="btn btn-outline-primary"><i class="fa-solid fa-gear"></i> 新建章节</button>
+    </div>
     <div class="chapter-list">
-      <button class="btn btn-primary btn-new"><i class="fa-solid fa-plus"></i> 新建章节</button>
+      <button class="btn btn-primary btn-new" id="detailOutlineBtn"><i class="fa-solid fa-plus"></i> 细纲（20）</button>
       <ul class="list-group">
         <li class="list-group-item">第一章：序幕</li>
         <li class="list-group-item">第二章：初遇</li>
@@ -106,7 +109,32 @@
           </div>
         </div>
       </div>
-      <button class="btn btn-success"><i class="fa-solid fa-save"></i> 保存</button>
+  <button class="btn btn-success" id="saveOutlineBtn"><i class="fa-solid fa-save"></i> 保存</button>
+  <!-- 细纲列表弹窗 -->
+  <div class="modal fade" id="outlineModal" tabindex="-1" aria-labelledby="outlineModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <!-- Loading覆盖层 -->
+        <div id="outlineLoading" style="display:none; position:absolute; left:0; top:0; width:100%; height:100%; background:rgba(255,255,255,0.85); z-index:1000; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+          <div class="spinner-border text-primary mb-3" role="status"></div>
+          <div style="font-size:1.2rem; color:#333;">正在生成细纲....</div>
+        </div>
+        <div class="modal-header">
+          <h5 class="modal-title" id="outlineModalLabel">细纲列表</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+          <ul class="list-group" id="outlineList">
+            <!-- 动态生成细纲项 -->
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success">确定</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">继续生成20章细纲</button>
+        </div>
+      </div>
+    </div>
+  </div>
       <button class="btn btn-success"><i class="fa-solid fa-save"></i> 开始第一章</button>
     </div>
         <div class="setting-section">
@@ -239,76 +267,6 @@
               </div>
             </div>
           </div>
-
-          <!-- 2.8 前5章剧情梗概 -->
-          <div class="mb-4 chapter-summary">
-            <div class="section-title">黄金开篇</div>
-            <div>黄金开篇，让AI根据小说设定和剧情梗概，生成黄金开篇，吸引读者，提高签约成功率</div>
-            <div class="accordion" id="chapterAccordion">
-              <!-- 示例章节 -->
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="heading1">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-                    第一章：序幕
-                  </button>
-                </h2>
-                <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="heading1" data-bs-parent="#chapterAccordion">
-                  <div class="accordion-body">
-                    <div class="mb-2">
-                      <label class="form-label">剧情梗概</label>
-                      <input type="text" class="form-control" placeholder="xxxx">
-                      <div class="actions flex" >
-                        <button class="btn btn-outline-primary btn-sm me-2">保存</button>
-                        <button class="btn btn-outline-secondary btn-sm">重新生成</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="heading1">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-                    第2章：序幕
-                  </button>
-                </h2>
-                <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="heading1" data-bs-parent="#chapterAccordion">
-                  <div class="accordion-body">
-                    <div class="mb-2">
-                      <label class="form-label">剧情梗概</label>
-                      <input type="text" class="form-control" placeholder="xxxx">
-                      <div class="actions flex" >
-                        <button class="btn btn-outline-primary btn-sm me-2">保存</button>
-                        <button class="btn btn-outline-secondary btn-sm">重新生成</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="heading1">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-                    第3章：序幕
-                  </button>
-                </h2>
-                <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="heading1" data-bs-parent="#chapterAccordion">
-                  <div class="accordion-body">
-                    <div class="mb-2">
-                      <label class="form-label">剧情梗概</label>
-                      <input type="text" class="form-control" placeholder="xxxx">
-                      <div class="actions flex" >
-                        <button class="btn btn-outline-primary btn-sm me-2">保存</button>
-                        <button class="btn btn-outline-secondary btn-sm">重新生成</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="start-actions">
-                <button>生成黄金开篇</button>
-              </div>
-              <!-- 可复制更多章节 -->
-            </div>
-          </div>
         </div>
       </div>
       <!-- 右侧：AI生成设定 -->
@@ -354,6 +312,56 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
+    // 显示/隐藏loading覆盖层
+    function showOutlineLoading(show) {
+      const loading = document.getElementById('outlineLoading');
+      if (loading) loading.style.display = show ? 'flex' : 'none';
+    }
+
+    // 示例：弹窗弹出时先显示loading，2秒后隐藏并显示内容
+    document.getElementById('saveOutlineBtn').addEventListener('click', function() {
+      renderOutlineList();
+      const modalEl = document.getElementById('outlineModal');
+      const modal = new bootstrap.Modal(modalEl);
+      showOutlineLoading(true);
+      modal.show();
+      setTimeout(() => {
+        showOutlineLoading(false);
+      }, 2000); // 2秒后隐藏loading
+    });
+    // 细纲数据示例
+    const outlineData = [
+      {chapter: '第一章', content: '主角穿越异界，初遇贵人'},
+      {chapter: '第二章', content: '拜入门派，结识同门'},
+      {chapter: '第三章', content: '初试炼，展现天赋'},
+      {chapter: '第四章', content: '遭遇危机，逆境成长'},
+      {chapter: '第五章', content: '获得机缘，实力大增'}
+    ];
+
+    // 渲染细纲列表
+    function renderOutlineList() {
+      const list = document.getElementById('outlineList');
+      if (!list) return;
+      list.innerHTML = '';
+      outlineData.forEach((item, idx) => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+        li.innerHTML = `<span><b>${item.chapter}：</b>${item.content}</span> <button class='btn btn-outline-primary btn-sm'>编辑</button>`;
+        list.appendChild(li);
+      });
+    }
+
+    // 保存按钮弹出细纲弹窗
+    document.getElementById('saveOutlineBtn').addEventListener('click', function() {
+      renderOutlineList();
+      const modal = new bootstrap.Modal(document.getElementById('outlineModal'));
+      modal.show();
+    });
+    document.getElementById('detailOutlineBtn').addEventListener('click', function() {
+      renderOutlineList();
+      const modal = new bootstrap.Modal(document.getElementById('outlineModal'));
+      modal.show();
+    });
     // 情绪强度滑块显示
     const emotionRange = document.getElementById('emotionRange');
     const emotionValue = document.getElementById('emotionValue');
