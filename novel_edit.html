@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
   <title>小说编辑页面</title>
@@ -9,18 +10,79 @@
   <!-- Font Awesome -->
   <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css" rel="stylesheet">
   <style>
-    body { background: #f7f8fa; }
-    .main-content { padding: 32px 40px; }
-    .editor-section { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 24px; height: 80vh; }
-    .side-section { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 24px; height: 80vh; display: flex; flex-direction: column; gap: 24px; }
-    .sortable-list { min-height: 120px; border: 1px solid #eee; border-radius: 8px; padding: 12px; background: #fafbfc; margin-bottom: 12px; }
-    .sortable-item { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 8px 12px; margin-bottom: 8px; cursor: grab; display: flex; align-items: center; justify-content: space-between; }
-    .sortable-item:last-child { margin-bottom: 0; }
-    .select-list { border: 1px solid #eee; border-radius: 8px; padding: 12px; background: #fafbfc; }
-    .select-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
-    .select-item:last-child { border-bottom: none; }
+    body {
+      background: #f7f8fa;
+    }
+
+    .main-content {
+      padding: 32px 40px;
+    }
+
+    .editor-section {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      padding: 24px;
+      height: 80vh;
+    }
+
+    .side-section {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      padding: 24px;
+      height: 80vh;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .sortable-list {
+      min-height: 120px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 12px;
+      background: #fafbfc;
+      margin-bottom: 12px;
+    }
+
+    .sortable-item {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sortable-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .select-list {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 12px;
+      background: #fafbfc;
+    }
+
+    .select-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .select-item:last-child {
+      border-bottom: none;
+    }
   </style>
 </head>
+
 <body>
   <main class="main-content">
     <div class="row">
@@ -28,44 +90,77 @@
       <div class="col-lg-7 col-12">
         <div class="editor-section h-100">
           <label class="form-label mb-2" for="richEditor">正文编辑</label>
-          <textarea id="richEditor" class="form-control" style="height:calc(80vh - 40px); resize:none;" placeholder="在此编辑正文内容..."></textarea>
+          <textarea id="richEditor" class="form-control" style="height:calc(80vh - 40px); resize:none;"
+            placeholder="在此编辑正文内容..."></textarea>
         </div>
       </div>
       <!-- 右侧：功能区 -->
       <div class="col-lg-5 col-12">
         <div class="side-section h-100">
-          <!-- 元素1：可拖动排序列表 -->
+          <!-- 新增元素：本章细纲 -->
           <div>
-            <div class="mb-2 fw-bold">本章剧情列表（可拖动排序）</div>
-            <div id="sortableList" class="sortable-list mb-2">
-              <!-- 动态生成 -->
+            <div class="mb-4">
+              <h4 class="fw-bold mb-0">本章细纲：</h4>
             </div>
-            <div class="text-end">
-              <button class="btn btn-success btn-sm" id="aiGenChapterBtn"><i class="fa-solid fa-robot"></i> AI生成本章内容</button>
+            <div class="mb-3" id="chapterOutline"
+              style="background:#fafbfc; border:1px solid #eee; border-radius:8px; padding:12px;">
+              这是本章的细纲内容，可以在这里展示章节的主要结构或要点。
+              <button class="btn btn-sm btn-primary me-2">编辑</button>
             </div>
-          </div>
-          <!-- 元素2：输入框+确定按钮 -->
-          <div>
-            <div class="mb-2 fw-bold">自定义剧情</div>
-            <div class="input-group">
-              <input type="text" id="fragmentInput" class="form-control" placeholder="输入片段内容">
-              <button id="addFragmentBtn" class="btn btn-primary">确定</button>
+
+            <!-- 元素1+2+3合并为一个卡片 -->
+            <h4 class="fw-bold mb-0">本章剧情配置：</h4>
+            <div class="card mb-3"
+              style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #eee;">
+              <div class="card-body" style="padding: 20px;">
+                <!-- 新增卡片大标题 -->
+                <!-- 视觉优化：来源区块纵向排列，色块和线条突出来源关系 -->
+                <div class="mb-2 fw-bold">本章剧情列表（可拖动排序）</div>
+                <div id="sortableList" class="sortable-list mb-2">
+                  <!-- 动态生成 -->
+                </div>
+                <!-- 来源区块 -->
+                <div class="mt-0 mb-2 position-relative" style="padding-left:32px;">
+                  <!-- 竖线连接 -->
+                  <div style="position:absolute;left:14px;top:0;bottom:0;width:4px;background:linear-gradient(to bottom,#2563eb 60%,#059669 100%);border-radius:2px;"></div>
+                  <!-- 来源提示语 -->
+                  <div class="mb-1 ps-1 fw-bold text-secondary" style="font-size:1.05rem;letter-spacing:1px;">
+                    <i class="fa-solid fa-arrow-down me-1"></i>剧情列表来源：
+                  </div>
+                  <!-- 自定义剧情来源色块 -->
+                  <div class="mb-3 p-3" style="background:#2563eb;border-radius:8px;box-shadow:0 2px 8px #0002;">
+                    <div class="mb-2 fw-bold text-light"><i class="fa fa-pen me-1"></i>自定义剧情</div>
+                    <div class="input-group">
+                      <textarea id="fragmentInput" class="form-control" rows="3" style="resize:vertical;" placeholder="输入自定义剧情内容"></textarea>
+                      <button id="addFragmentBtn" class="btn btn-light ms-2">确定</button>
+                    </div>
+                  </div>
+                  <!-- AI推荐剧情来源色块 -->
+                  <div class="mb-1 p-3" style="background:#059669;border-radius:8px;box-shadow:0 2px 8px #0002;">
+                    <div class="mb-2 fw-bold d-flex align-items-center justify-content-between text-light"><i class="fa fa-robot me-1"></i>AI推荐剧情
+                      <button class="btn btn-sm btn-outline-light ms-2">重新生成</button>
+                    </div>
+                    <div id="selectList" class="select-list" style="background:#fff;">
+                      <!-- 动态生成 -->
+                    </div>
+                  </div>
+                  <div class="text-secondary small ps-2 pt-1"><i class="fa-solid fa-arrow-up me-1"></i>可点击“选择”或“确定”将内容加入上方剧情列表</div>
+                </div>
+              </div>
             </div>
-          </div>
-          <!-- 元素3：选择列表 -->
-          <div>
-            <div class="mb-2 fw-bold">AI推荐剧情</div>
-            <div id="selectList" class="select-list">
-              <!-- 动态生成 -->
+            <!-- 新增底部AI生成按钮 -->
+            <div class="d-flex mt-auto align-items-center gap-2">
+              <span data-bs-toggle="tooltip" data-bs-placement="top" title="AI会根据本章细纲，以及剧情配置中的剧情列表（按顺序）生成本章内容。"
+                style="cursor: pointer;">
+                <i class="fa-solid fa-circle-question text-secondary"></i>
+              </span>
+              <button class="btn btn-success w-100" id="aiGenChapterBtn">
+                <i class="fa-solid fa-robot"></i> AI生成本章内容
+              </button>
             </div>
-          </div>
-          <!-- 新增底部AI生成按钮 -->
-          <div class="mt-auto">
-            <button class="btn btn-success w-100" id="aiGenChapterBtn"><i class="fa-solid fa-robot"></i> AI生成本章内容</button>
           </div>
         </div>
       </div>
-    </div>
   </main>
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -103,9 +198,9 @@
     }
 
     // 新增片段
-    document.getElementById('addFragmentBtn').onclick = function() {
+    document.getElementById('addFragmentBtn').onclick = function () {
       const val = document.getElementById('fragmentInput').value.trim();
-      if(val) {
+      if (val) {
         fragments.push(val);
         renderSortableList();
         document.getElementById('fragmentInput').value = '';
@@ -113,13 +208,13 @@
     };
 
     // 删除片段
-    window.removeFragment = function(idx) {
+    window.removeFragment = function (idx) {
       fragments.splice(idx, 1);
       renderSortableList();
     };
 
     // 选择片段
-    window.chooseFragment = function(idx) {
+    window.chooseFragment = function (idx) {
       fragments.push(selectable[idx]);
       renderSortableList();
     };
@@ -134,9 +229,18 @@
       }
     });
 
+    // 启用所有 tooltip
+    document.addEventListener('DOMContentLoaded', function () {
+      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+        new bootstrap.Tooltip(tooltipTriggerEl);
+      });
+    });
+
     // 初始化
     renderSortableList();
     renderSelectList();
   </script>
 </body>
+
 </html>
