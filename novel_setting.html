@@ -1,200 +1,262 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <title>小说设定页面</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Bootstrap 5 -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <!-- Font Awesome -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css"
-      rel="stylesheet"
-    />
-    <style>
-      body {
-        background: #f7f8fa;
-      }
-      .header {
-        background: #fff;
-        border-bottom: 1px solid #eee;
-        padding: 0 32px;
-        height: 64px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-      }
-      .header-logo {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #3b82f6;
-      }
-      .header-menu {
-        display: flex;
-        gap: 32px;
-      }
-      .header-menu a {
-        color: #333;
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.2s;
-      }
-      .header-menu a:hover {
-        color: #3b82f6;
-      }
-      .sidebar {
-        width: 200px;
-        background: #fff;
-        border-right: 1px solid #eee;
-        min-height: calc(100vh - 64px);
-        padding: 24px 0;
-        position: fixed;
-        top: 64px;
-        left: 0;
-      }
-      .sidebar .btn-setting {
-        margin: 0 24px 16px 24px;
-        width: calc(100% - 48px);
-      }
-      .chapter-list {
-        margin: 0 24px;
-      }
-      .chapter-list .btn-new {
-        width: 100%;
-        margin-bottom: 12px;
-      }
-      .main-content {
-        margin-left: 200px;
-        padding: 32px 40px 32px 40px;
-      }
-      .info-bar {
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        padding: 24px 32px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: sticky;
-        top: 64px;
-        z-index: 900;
-      }
-      .info-left {
-        display: flex;
-        align-items: center;
-        gap: 24px;
-      }
-      .cover-img {
-        width: 80px;
-        height: 110px;
-        object-fit: cover;
-        border-radius: 8px;
-        border: 1px solid #eee;
-      }
-      .info-editable {
-        border: none;
-        background: #f7f8fa;
-        font-size: 1.2rem;
-        font-weight: bold;
-        width: 180px;
-      }
-      .info-right .btn {
-        margin-left: 12px;
-      }
-      .setting-section {
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        padding: 32px;
-        margin-top: 0px;
-      }
-      .section-title {
-        font-size: 1.1rem;
-        font-weight: bold;
-        margin-bottom: 8px;
-        color: #3b82f6;
-      }
-      .section-tip {
-        font-size: 0.95rem;
-        color: #888;
-        margin-bottom: 16px;
-      }
-      .relation-tabs .nav-link {
-        font-weight: 500;
-      }
-      .chapter-summary .accordion-button {
-        font-weight: bold;
-      }
-      .chapter-summary .form-label {
-        font-size: 0.95rem;
-        color: #555;
-      }
-      .slider-value {
-        margin-left: 8px;
-        font-weight: 500;
-        color: #3b82f6;
-      }
-      @media (max-width: 900px) {
-        .sidebar {
-          display: none;
-        }
-        .main-content {
-          margin-left: 0;
-          padding: 16px;
-        }
-        .info-bar {
-          flex-direction: column;
-          gap: 16px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Header -->
-    <div class="header">
-      <div class="header-logo">
-        <i class="fa-solid fa-book-open"></i> 墨斗网文写作工具
-      </div>
-      <nav class="header-menu">
-        <a href="#">书架</a>
-        <a href="#">角色库</a>
-        <a href="#">灵感库</a>
-        <a href="#">会员服务</a>
-        <a href="#">个人中心</a>
-      </nav>
-    </div>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <button class="btn btn-outline-primary btn-setting">
-        <i class="fa-solid fa-gear"></i> 设置
-      </button>
-      <div class="chapter-list">
-        <button class="btn btn-primary btn-new">
-          <i class="fa-solid fa-plus"></i> 新建章节
-        </button>
-        <ul class="list-group">
-          <li class="list-group-item">第一章：序幕</li>
-          <li class="list-group-item">第二章：初遇</li>
-          <li class="list-group-item">第三章：转折</li>
-          <!-- ...更多章节... -->
-        </ul>
-      </div>
-    </aside>
+<head>
+  <meta charset="UTF-8" />
+  <title>小说设定页面</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: #f7f8fa;
+    }
+
+    .header {
+      background: #fff;
+      border-bottom: 1px solid #eee;
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .header-logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #3b82f6;
+    }
+
+    .header-menu {
+      display: flex;
+      gap: 32px;
+    }
+
+    .header-menu a {
+      color: #333;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .header-menu a:hover {
+      color: #3b82f6;
+    }
+
+    .sidebar {
+      width: 200px;
+      background: #fff;
+      border-right: 1px solid #eee;
+      min-height: calc(100vh - 64px);
+      padding: 24px 0;
+      position: fixed;
+      top: 64px;
+      left: 0;
+    }
+
+    .sidebar .btn-setting {
+      margin: 0 24px 16px 24px;
+      width: calc(100% - 48px);
+    }
+
+    .chapter-list {
+      margin: 0 24px;
+    }
+
+    .chapter-list .btn-new {
+      width: 100%;
+      margin-bottom: 12px;
+    }
+
+    .main-content {
+      margin-left: 200px;
+      padding: 32px 40px 32px 40px;
+    }
+
+    .info-bar {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 64px;
+      z-index: 900;
+    }
+
+    .info-left {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .cover-img {
+      width: 80px;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #eee;
+    }
+
+    .info-editable {
+      border: none;
+      background: #f7f8fa;
+      font-size: 1.2rem;
+      font-weight: bold;
+      width: 180px;
+    }
+
+    .info-right .btn {
+      margin-left: 12px;
+    }
+
+    .setting-section {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      padding: 32px;
+      margin-top: 0px;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #3b82f6;
+    }
+
+    .section-tip {
+      font-size: 0.95rem;
+      color: #888;
+      margin-bottom: 16px;
+    }
+
+    .relation-tabs .nav-link {
+      font-weight: 500;
+    }
+
+    .chapter-summary .accordion-button {
+      font-weight: bold;
+    }
+
+    .chapter-summary .form-label {
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    .slider-value {
+      margin-left: 8px;
+      font-weight: 500;
+      color: #3b82f6;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        display: none;
+      }
+
+      .main-content {
+        margin-left: 0;
+        padding: 16px;
+      }
+
+      .info-bar {
+        flex-direction: column;
+        gap: 16px;
+      }
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .overlay-text {
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    /* 口癖列模糊覆盖样式 */
+    .koupi-cell {
+      position: relative;
+      overflow: hidden;
+      min-width: 80px;
+      max-width: 220px;
+      white-space: nowrap;
+    }
+
+    .koupi-text {
+      filter: blur(3px);
+      -webkit-filter: blur(3px);
+      color: #333;
+      display: inline-block;
+      padding: 4px 6px;
+    }
+
+    .koupi-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.6);
+      color: #b5651d; /* 土黄色，突出会员提示 */
+      font-weight: 700;
+      pointer-events: auto; /* 阻塞交互，会员可用覆盖层会拦截点击 */
+      z-index: 2;
+    }
+
+    /* 如果将来需要解锁口癖，给 .koupi-cell 加上 .unlocked 即可去除模糊并隐藏覆盖层 */
+    .koupi-cell.unlocked .koupi-text {
+      filter: none;
+      -webkit-filter: none;
+    }
+    .koupi-cell.unlocked .koupi-overlay {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="header-logo">
+      <i class="fa-solid fa-book-open"></i> 墨斗网文写作工具
+    </div>
+    <nav class="header-menu">
+      <a href="#">书架</a>
+      <a href="#">角色库</a>
+      <a href="#">灵感库</a>
+      <a href="#">会员服务</a>
+      <a href="#">个人中心</a>
+    </nav>
+  </div>
+
   <!-- Sidebar -->
   <aside class="sidebar">
-    <div style="display: flex; flex-direction: row;margin-bottom: 10px;">
-      <button class="btn btn-outline-primary"><i class="fa-solid fa-gear"></i> 设置</button>
-      <button class="btn btn-outline-primary"><i class="fa-solid fa-gear"></i> 新建章节</button>
-    </div>
+    <button class="btn btn-outline-primary btn-setting">
+      <i class="fa-solid fa-gear"></i> 设置
+    </button>
     <div class="chapter-list">
-      <button class="btn btn-primary btn-new" id="detailOutlineBtn"><i class="fa-solid fa-plus"></i> 细纲（20）</button>
+      <button class="btn btn-primary btn-new">
+        <i class="fa-solid fa-plus"></i> 新建章节
+      </button>
       <ul class="list-group">
         <li class="list-group-item">第一章：序幕</li>
         <li class="list-group-item">第二章：初遇</li>
@@ -204,538 +266,117 @@
     </div>
   </aside>
 
-    <!-- Main Content -->
-    <main class="main-content">
-      <div class="row">
-        <!-- 左侧：设定内容 -->
-        <div class="col-lg-7 col-12">
-          <!-- 新增顶部信息栏 -->
-          <div
-            class="d-flex flex-wrap align-items-center justify-content-between mb-4"
-            style="
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="row">
+      <!-- 左侧：设定内容 -->
+      <div class="col-lg-7 col-12">
+        <!-- 新增顶部信息栏 -->
+        <div class="d-flex flex-wrap align-items-center justify-content-between mb-4" style="
               background: #fff;
               border-radius: 12px;
               box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
               padding: 20px 32px;
-            "
-          >
-            <div class="d-flex flex-wrap align-items-center gap-3">
+            ">
+          <div class="d-flex flex-wrap align-items-center gap-3">
+            <div>
+              <label class="form-label mb-1" for="novelNameInput">小说名字</label>
+              <input id="novelNameInput" type="text" class="form-control" style="width: 180px" placeholder="请输入小说名字" />
+            </div>
+            <div>
+              <label class="form-label mb-1" for="novelTypeSelect">小说类型</label>
+              <select id="novelTypeSelect" class="form-select" style="width: 140px">
+                <option value="">请选择</option>
+                <option>仙侠</option>
+                <option>玄幻</option>
+                <option>修真</option>
+                <option>都市</option>
+                <option>悬疑</option>
+                <option>科幻</option>
+                <option>历史</option>
+                <option>轻小说</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label mb-1">目标读者</label>
               <div>
-                <label class="form-label mb-1" for="novelNameInput"
-                  >小说名字</label
-                >
-                <input
-                  id="novelNameInput"
-                  type="text"
-                  class="form-control"
-                  style="width: 180px"
-                  placeholder="请输入小说名字"
-                />
-              </div>
-              <div>
-                <label class="form-label mb-1" for="novelTypeSelect"
-                  >小说类型</label
-                >
-                <select
-                  id="novelTypeSelect"
-                  class="form-select"
-                  style="width: 140px"
-                >
-                  <option value="">请选择</option>
-                  <option>仙侠</option>
-                  <option>玄幻</option>
-                  <option>修真</option>
-                  <option>都市</option>
-                  <option>悬疑</option>
-                  <option>科幻</option>
-                  <option>历史</option>
-                  <option>轻小说</option>
-                </select>
-              </div>
-              <div>
-                <label class="form-label mb-1">目标读者</label>
-                <div>
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="topReaderType"
-                    id="topMale"
-                    value="男频"
-                  />
-                  <label class="form-check-label me-2" for="topMale"
-                    >男频</label
-                  >
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="topReaderType"
-                    id="topFemale"
-                    value="女频"
-                  />
-                  <label class="form-check-label me-2" for="topFemale"
-                    >女频</label
-                  >
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="topReaderType"
-                    id="topAll"
-                    value="全部"
-                  />
-                  <label class="form-check-label" for="topAll">全部</label>
-                </div>
+                <input class="form-check-input" type="radio" name="topReaderType" id="topMale" value="男频" />
+                <label class="form-check-label me-2" for="topMale">男频</label>
+                <input class="form-check-input" type="radio" name="topReaderType" id="topFemale" value="女频" />
+                <label class="form-check-label me-2" for="topFemale">女频</label>
+                <input class="form-check-input" type="radio" name="topReaderType" id="topAll" value="全部" />
+                <label class="form-check-label" for="topAll">全部</label>
               </div>
             </div>
-            <button class="btn btn-success">
-              <i class="fa-solid fa-save"></i> 保存
-            </button>
-            <button class="btn btn-success">
-              <i class="fa-solid fa-save"></i> 开始第一章
-            </button>
           </div>
-          <div class="setting-section">
-            <!-- 2.3 主角信息 -->
-            <div class="mb-4">
-              <div class="section-title">主角信息</div>
-              <div class="section-tip">
-                写一句话概述主角身份和目标，AI会根据这个设计人物和剧情走向。
-              </div>
-              <div class="row g-2">
-                <div class="col-md-3">
-                  <label class="form-label" for="mainCharName">主角姓名</label>
-                  <input
-                    type="text"
-                    id="mainCharName"
-                    class="form-control"
-                    placeholder="主角姓名"
-                  />
-                </div>
-  <!-- Main Content -->
-  <main class="main-content">
-
-
-    <div class="row">
-      <!-- 左侧：设定内容 -->
-      <div class="col-lg-7 col-12">
-            <!-- 新增顶部信息栏 -->
-    <div class="d-flex flex-wrap align-items-center justify-content-between mb-4" style="background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:20px 32px;">
-      <div class="d-flex flex-wrap align-items-center gap-3">
-        <div>
-          <label class="form-label mb-1" for="novelNameInput">小说名字</label>
-          <input id="novelNameInput" type="text" class="form-control" style="width:180px;" placeholder="请输入小说名字">
+          <button class="btn btn-success">
+            <i class="fa-solid fa-save"></i> 保存
+          </button>
+          <button class="btn btn-success">
+            <i class="fa-solid fa-save"></i> 开始第一章
+          </button>
         </div>
-        <div>
-          <label class="form-label mb-1" for="novelTypeSelect">小说类型</label>
-          <select id="novelTypeSelect" class="form-select" style="width:140px;">
-            <option value="">请选择</option>
-            <option>仙侠</option>
-            <option>玄幻</option>
-            <option>修真</option>
-            <option>都市</option>
-            <option>悬疑</option>
-            <option>科幻</option>
-            <option>历史</option>
-            <option>轻小说</option>
-          </select>
-        </div>
-        <div>
-          <label class="form-label mb-1">目标读者</label>
-          <div>
-            <input class="form-check-input" type="radio" name="topReaderType" id="topMale" value="男频">
-            <label class="form-check-label me-2" for="topMale">男频</label>
-            <input class="form-check-input" type="radio" name="topReaderType" id="topFemale" value="女频">
-            <label class="form-check-label me-2" for="topFemale">女频</label>
-            <input class="form-check-input" type="radio" name="topReaderType" id="topAll" value="全部">
-            <label class="form-check-label" for="topAll">全部</label>
-          </div>
-        </div>
-      </div>
-  <button class="btn btn-success" id="saveOutlineBtn"><i class="fa-solid fa-save"></i> 保存</button>
-  <!-- 细纲列表弹窗 -->
-  <div class="modal fade" id="outlineModal" tabindex="-1" aria-labelledby="outlineModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content">
-        <!-- Loading覆盖层 -->
-        <div id="outlineLoading" style="display:none; position:absolute; left:0; top:0; width:100%; height:100%; background:rgba(255,255,255,0.85); z-index:1000; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-          <div class="spinner-border text-primary mb-3" role="status"></div>
-          <div style="font-size:1.2rem; color:#333;">正在生成细纲....</div>
-        </div>
-        <div class="modal-header">
-          <h5 class="modal-title" id="outlineModalLabel">细纲列表</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
-          <ul class="list-group" id="outlineList">
-            <!-- 动态生成细纲项 -->
-          </ul>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-success">确定</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">继续生成20章细纲</button>
-        </div>
-      </div>
-    </div>
-  </div>
-      <button class="btn btn-success"><i class="fa-solid fa-save"></i> 开始第一章</button>
-    </div>
         <div class="setting-section">
-            
-
-
           <!-- 2.3 主角信息 -->
           <div class="mb-4">
             <div class="section-title">主角信息</div>
-            <div class="section-tip">写一句话概述主角身份和目标，AI会根据这个设计人物和剧情走向。</div>
+            <div class="section-tip">
+              写一句话概述主角身份和目标，AI会根据这个设计人物和剧情走向。
+            </div>
             <div class="row g-2">
               <div class="col-md-3">
                 <label class="form-label" for="mainCharName">主角姓名</label>
-                <input type="text" id="mainCharName" class="form-control" placeholder="主角姓名">
+                <input type="text" id="mainCharName" class="form-control" placeholder="主角姓名" />
               </div>
 
-                <div class="col-md-3">
-                  <label class="form-label" for="mainCharGoal">性格</label>
-                  <input
-                    type="text"
-                    id="mainCharGoal"
-                    class="form-control"
-                    placeholder="如：加入门派修炼、寻找失散亲人"
-                  />
-                </div>
-                <div class="col-md-3">
-                  <label class="form-label" for="mainCharGender">性别</label>
-                  <select id="mainCharGender" class="form-select">
-                    <option>男</option>
-                    <option>女</option>
-                  </select>
-                </div>
+              <div class="col-md-3">
+                <label class="form-label" for="mainCharGoal">性格</label>
+                <input type="text" id="mainCharGoal" class="form-control" placeholder="如：加入门派修炼、寻找失散亲人" />
               </div>
-              <label class="form-label mt-2" for="mainCharSummary"
-                >额外信息</label
-              >
-              <input
-                type="text"
-                id="mainCharSummary"
-                class="form-control mt-2"
-                placeholder="比如主角的成长经历，家庭情况等，越详细，AI生成主角相关的语言和心理，行为等就越符合人设"
-              />
+              <div class="col-md-3">
+                <label class="form-label" for="mainCharGender">性别</label>
+                <select id="mainCharGender" class="form-select">
+                  <option>男</option>
+                  <option>女</option>
+                </select>
+              </div>
             </div>
-            <div class="mb-4">
-              <div class="section-title">人物关系表</div>
-              <div class="section-tip">
-                人物设定越完善，
-                对AI的约束就越强，不一定写全，把主角和1-3个配角写清楚即可
-              </div>
-              <ul
-                class="nav nav-tabs relation-tabs"
-                id="relationTab"
-                role="tablist"
-              >
-                <li class="nav-item" role="presentation">
-                  <button
-                    class="nav-link active"
-                    id="table-tab"
-                    data-bs-toggle="tab"
-                    data-bs-target="#table"
-                    type="button"
-                    role="tab"
-                  >
-                    关系表
-                  </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                  <button
-                    class="nav-link"
-                    id="graph-tab"
-                    data-bs-toggle="tab"
-                    data-bs-target="#graph"
-                    type="button"
-                    role="tab"
-                  >
-                    关系拓扑图
-                  </button>
-                </li>
-              </ul>
-              <div class="tab-content mt-3" id="relationTabContent">
-                <div
-                  class="tab-pane fade show active"
-                  id="table"
-                  role="tabpanel"
-                >
-                  <table class="table table-bordered table-sm">
-                    <thead>
-                      <tr>
-                        <th>姓名</th>
-                        <th>性别</th>
-                        <th>角色定位</th>
-                        <th>与主角关系</th>
-                        <th>性格特征</th>
-                        <th>经历描述</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>主角A</td>
-                        <td>男</td>
-                        <td>主角</td>
-                        <td>自己</td>
-                        <td>机智</td>
-                        <td>贫苦家庭，立志修仙</td>
-                      </tr>
-                      <tr>
-                        <td>配角B</td>
-                        <td>女</td>
-                        <td>师妹</td>
-                        <td>青梅竹马</td>
-                        <td>一般</td>
-                        <td>聪明伶俐，家世优越</td>
-                      </tr>
-                      <!-- 更多人物... -->
-                    </tbody>
-                  </table>
-                  <button>新增角色</button>
-                  <button>从角色库导入角色</button>
-                  <button>修改角色</button>
-                  <button>删除角色</button>
-                </div>
-                <div class="tab-pane fade" id="graph" role="tabpanel">
-                  <div class="text-center text-muted py-4">
-                    <i class="fa-solid fa-diagram-project fa-2x mb-2"></i>
-                    <div>人物关系拓扑图（可视化展示，需前端支持）</div>
+            <label class="form-label mt-2" for="mainCharSummary">成长经历</label>
+            <input type="text" id="mainCharSummary" class="form-control mt-2"
+              placeholder="比如主角的成长经历，家庭情况等，越详细，AI生成主角相关的语言和心理，行为等就越符合人设" />
+
+            <div class="position-relative mt-3">
+              <label class="form-label mt-2" for="mainCharKoupiPattern">角色口癖</label>
+              <div class="row g-2 align-items-start mt-2">
+                <div class="col-md-4">
+                  <!-- Locked display: blurred input with membership overlay -->
+                  <div class="koupi-cell locked">
+                    <input type="text" id="mainCharKoupiPattern" class="form-control koupi-text" placeholder="口癖句式，例如：'……'、常用短语等" readonly />
+                    <div class="koupi-overlay">会员可用</div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- 2.4 叙事风格 / 读者感受 -->
-            <div class="mb-4">
-              <div class="section-title">世界观</div>
-              <div class="section-tip">力量体系，世界规则等</div>
-              <div class="mb-2">
-                <textarea
-                  type="textarea"
-                  class="form-control mt-2"
-                  placeholder="练气/筑基/xxx/xxxx"
-                ></textarea>
-              </div>
-              <!-- <div class="d-flex align-items-center mt-2">
-              <label for="emotionRange" class="form-label mb-0">情绪强度：</label>
-              <input type="range" class="form-range" min="0" max="10" id="emotionRange" style="width:180px;">
-              <span class="slider-value" id="emotionValue">5</span>
-            </div> -->
-            </div>
-
-            <!-- 2.5 故事规模 -->
-            <div class="mb-4">
-              <div class="section-title">故事规模</div>
-              <div class="section-tip">
-                预估全书字数，决定AI生成大纲的事件数量和支线数量。
-              </div>
-              <div class="row g-2 align-items-center">
-           
-                <div class="col-md-4">
-                  <input
-                    type="number"
-                    class="form-control"
-                    placeholder="自定义字数上限（如：120000）"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <!-- 2.6 设定总结输入框 -->
-            <div class="mb-4">
-              <div class="section-title">设定总结（大纲）</div>
-              <div class="section-tip">
-                设定总结，即大纲，简要概括故事的主要情节和结构。由AI生成，如果不满意可随意修改或者再次生成。
-                <div style="color: brown">小说信息已变更，建议重新生成大纲</div>
-                <button>重新生成</button>
-              </div>
-
-              <textarea
-                class="form-control"
-                rows="3"
-                placeholder="请填写小说设定总结或大纲"
-              ></textarea>
-            </div>
-            <div>
-              <div class="section-title">细纲（章节概要）</div>
-              根据大纲生成细纲
-              <button id="genOutlineBtn">生成细纲</button>
-              <!-- 细纲列表 -->
-              <div id="outlineList" class="mt-3">
-  <!-- 示例项1 -->
-  <div class="outline-item border rounded mb-2 p-2">
-    <div class="d-flex align-items-center justify-content-between">
-      <div class="flex-grow-1">
-        <span class="outline-text">
-          第一章：主角在家乡遭遇变故，被迫踏上修仙之路。家族的灭亡让他背负仇恨，发誓要查明真相。途中遇到神秘老人，获得一枚古老玉佩，玉佩中隐藏着修炼秘籍和未知的秘密，主角开始踏上艰难的修炼之旅，逐步揭开家族被灭的谜团。
-        </span>
-      </div>
-      <div class="ms-2 d-flex align-items-center gap-2">
-        <button class="btn btn-sm btn-outline-secondary toggle-btn" onclick="toggleOutline(this)">展开</button>
-        <button class="btn btn-sm btn-outline-primary">编辑</button>
-      </div>
-    </div>
-  </div>
-  <!-- 示例项2 -->
-  <div class="outline-item border rounded mb-2 p-2">
-    <div class="d-flex align-items-center justify-content-between">
-      <div class="flex-grow-1">
-        <span class="outline-text">
-          第二章：主角进入宗门，初试炼丹失败，遭遇同门排挤。师父却慧眼识珠，收其为徒。主角在宗门中结识师妹，两人共同面对宗门考核，逐渐建立深厚友谊。主角在修炼过程中发现玉佩的异常，开始探索玉佩的真正来历。
-        </span>
-      </div>
-      <div class="ms-2 d-flex align-items-center gap-2">
-        <button class="btn btn-sm btn-outline-secondary toggle-btn" onclick="toggleOutline(this)">展开</button>
-        <button class="btn btn-sm btn-outline-primary">编辑</button>
-      </div>
-    </div>
-  </div>
-  <!-- 示例项3 -->
-  <div class="outline-item border rounded mb-2 p-2">
-    <div class="d-flex align-items-center justify-content-between">
-      <div class="flex-grow-1">
-        <span class="outline-text">
-          第三章：宗门大比来临，主角与师妹联手闯关，面对强敌和重重考验。主角在危急时刻激发玉佩力量，逆转战局，获得宗门高层关注。赛后，主角发现玉佩与宗门历史有着千丝万缕的联系，决定深入调查宗门往事，寻找父母被害的线索。
-        </span>
-      </div>
-      <div class="ms-2 d-flex align-items-center gap-2">
-        <button class="btn btn-sm btn-outline-secondary toggle-btn" onclick="toggleOutline(this)">展开</button>
-        <button class="btn btn-sm btn-outline-primary">编辑</button>
-      </div>
-    </div>
-  </div>
-  <!-- 示例项4 -->
-  <div class="outline-item border rounded mb-2 p-2">
-    <div class="d-flex align-items-center justify-content-between">
-      <div class="flex-grow-1">
-        <span class="outline-text">
-          第四章：主角与师妹外出历练，遭遇神秘敌人追杀。危急关头，主角领悟玉佩中的新技能，成功脱险。两人回宗门后，发现宗门内部暗流涌动，主角被卷入宗门权力斗争，逐渐成长为宗门新星。
-        </span>
-      </div>
-      <div class="ms-2 d-flex align-items-center gap-2">
-        <button class="btn btn-sm btn-outline-secondary toggle-btn" onclick="toggleOutline(this)">展开</button>
-        <button class="btn btn-sm btn-outline-primary">编辑</button>
-      </div>
-    </div>
-  </div>
-</div>
-            </div>
           </div>
-        </div>
-        <!-- 右侧：AI生成设定 -->
-        <div class="col-lg-5 col-12">
-          <div
-            class="ai-gen-setting"
-            style="
-              background: #fff;
-              border-radius: 12px;
-              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-              padding: 32px;
-              min-height: 400px;
-            "
-          >
-            <div>
-              我是墨斗AI辅助创作工具，在此页面我可以帮助你完善小说设定信息哦~
-            </div>
-            <div>
-              AI默认会根据你选择的小说类型和目标读者随机生成匹配的设定信息。
-            </div>
-            <div>你也可以一句话表述一下你的灵感：</div>
-            <div class="d-flex gap-2 mb-3">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="请输入你的灵感"
-              />
-              <button>导入</button>
-            </div>
-
-            <div
-              class="d-flex justify-content-between align-items-center mb-3 mt-3"
-            >
-              <button id="aiGenBtn" class="btn btn-primary">
-                <i class="fa-solid fa-rocket"></i> AI一键生成所有设定信息
-              </button>
-              <button
-                id="applyAllBtn"
-                class="btn btn-success"
-                style="display: none"
-              >
-                全部应用
-              </button>
-            </div>
-            <div id="aiGenSections" style="display: none">
-              <!-- 动态生成设定项 -->
-              <div class="mb-3 border-bottom pb-2">
-                <div class="fw-bold mb-1">主角信息</div>
-                <div class="mb-1" id="aiTypeValue">
-                  萨达萨达是大大苏打实打实大大实打实的
-                </div>
-                <button class="btn btn-outline-primary btn-sm me-2">
-                  应用
-                </button>
-                <button class="btn btn-outline-secondary btn-sm">重新</button>
-              </div>
-              <div class="mb-3 border-bottom pb-2">
-                <div class="fw-bold mb-1">世界观</div>
-                <div class="mb-1" id="aiReaderValue">
-                  阿三大苏打实打实的啊实打实打算大苏打阿三是豆腐干士大夫士大夫阿斯顿发射点奥法
-                </div>
-                <button class="btn btn-outline-primary btn-sm me-2">
-                  应用
-                </button>
-                <button class="btn btn-outline-secondary btn-sm">重新</button>
-              </div>
-              <div class="mb-3 border-bottom pb-2">
-                <div class="fw-bold mb-1">配角信息</div>
-                <div class="mb-1" id="aiMainCharValue">
-                  贫苦家庭，目标：修仙
-                </div>
-                <button class="btn btn-outline-primary btn-sm me-2">
-                  应用
-                </button>
-                <button class="btn btn-outline-secondary btn-sm">重新</button>
-              </div>
-              <div class="mb-3 border-bottom pb-2">
-                <div class="fw-bold mb-1">大纲</div>
-                <div class="mb-1" id="aiOutlineValue">
-                  啊实打实大苏打实打实大撒大撒大苏打撒旦啊实打实大苏打实打实的
-                </div>
-                <button class="btn btn-outline-primary btn-sm me-2">
-                  应用
-                </button>
-              </div>
-              <!-- 可继续添加其它设定项 -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-            </div>
-          </div>
-
-          <!-- 2.6 设定总结输入框 -->
-          <div class="mb-4">
-            <div class="section-title">设定总结（大纲）</div>
-            <div class="section-tip">设定总结，即大纲，简要概括故事的主要情节和结构。由AI生成，如果不满意可随意修改或者再次生成。
-              <div style="color: brown;">小说信息已变更，建议重新生成大纲</div>
-              <button>重新生成</button>
-            </div>
-            
-            <textarea class="form-control" rows="3" placeholder="请填写小说设定总结或大纲"></textarea>
-          </div>
-
-          <!-- 2.7 人物关系表 -->
           <div class="mb-4">
             <div class="section-title">人物关系表</div>
-            <div class="section-tip">人物设定越完善， 对AI的约束就越强，不一定写全，把主角和1-3个配角写清楚即可</div>
+            <div class="section-tip">
+              人物设定越完善，
+              对AI的约束就越强，不一定写全，把主角和1-3个配角写清楚即可
+            </div>
             <ul class="nav nav-tabs relation-tabs" id="relationTab" role="tablist">
               <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="table-tab" data-bs-toggle="tab" data-bs-target="#table" type="button" role="tab">关系表</button>
+                <button class="nav-link active" id="table-tab" data-bs-toggle="tab" data-bs-target="#table"
+                  type="button" role="tab">
+                  关系表
+                </button>
               </li>
               <li class="nav-item" role="presentation">
-                <button class="nav-link" id="graph-tab" data-bs-toggle="tab" data-bs-target="#graph" type="button" role="tab">关系拓扑图</button>
+                <button class="nav-link" id="graph-tab" data-bs-toggle="tab" data-bs-target="#graph" type="button"
+                  role="tab">
+                  关系拓扑图
+                </button>
               </li>
             </ul>
             <div class="tab-content mt-3" id="relationTabContent">
@@ -749,6 +390,7 @@
                       <th>与主角关系</th>
                       <th>性格特征</th>
                       <th>经历描述</th>
+                      <th>角色口癖</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -759,6 +401,12 @@
                       <td>自己</td>
                       <td>机智</td>
                       <td>贫苦家庭，立志修仙</td>
+                      <td>
+                        <div class="koupi-cell">
+                          <div class="koupi-text">“嗯哼”</div>
+                          <div class="koupi-overlay">会员可用</div>
+                        </div>
+                      </td>
                     </tr>
                     <tr>
                       <td>配角B</td>
@@ -767,11 +415,18 @@
                       <td>青梅竹马</td>
                       <td>一般</td>
                       <td>聪明伶俐，家世优越</td>
+                      <td>
+                        <div class="koupi-cell">
+                          <div class="koupi-text">“呵呵”</div>
+                          <div class="koupi-overlay">会员可用</div>
+                        </div>
+                      </td>
                     </tr>
                     <!-- 更多人物... -->
                   </tbody>
                 </table>
                 <button>新增角色</button>
+                <button>从角色库导入角色</button>
                 <button>修改角色</button>
                 <button>删除角色</button>
               </div>
@@ -783,40 +438,200 @@
               </div>
             </div>
           </div>
+
+          <!-- 2.4 叙事风格 / 读者感受 -->
+          <div class="mb-4">
+            <div class="section-title">世界观</div>
+            <div class="section-tip">力量体系，世界规则等</div>
+            <div class="mb-2">
+              <textarea type="textarea" class="form-control mt-2" placeholder="练气/筑基/xxx/xxxx"></textarea>
+            </div>
+            <!-- <div class="d-flex align-items-center mt-2">
+              <label for="emotionRange" class="form-label mb-0">情绪强度：</label>
+              <input type="range" class="form-range" min="0" max="10" id="emotionRange" style="width:180px;">
+              <span class="slider-value" id="emotionValue">5</span>
+            </div> -->
+          </div>
+
+          <!-- 2.5 故事规模 -->
+          <div class="mb-4">
+            <div class="section-title">故事规模</div>
+            <div class="section-tip">
+              预估全书字数，决定AI生成大纲的事件数量和支线数量。
+            </div>
+            <div class="row g-2 align-items-center">
+              <!-- <div class="col-md-4">
+                <select class="form-select">
+                  <option>短篇（&lt;10万字）</option>
+                  <option>中篇（10-50万字）</option>
+                  <option>长篇（&gt;50万字）</option>
+                </select>
+              </div> -->
+              <div class="col-md-4 d-flex align-items-center">
+                <input type="number" class="form-control" id="wordCountInput" placeholder="自定义字数上限（如：20）" min="1" />
+                <span class="ms-4" style="width: 80px;">万 字</span>
+              </div>
+              <div class="col-12">
+                <div id="chapterCountTip" class="mt-2 text-secondary" style="display:none"></div>
+                <div id="wordCountError" class="mt-1 text-danger" style="display:none"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2.6 设定总结输入框 -->
+          <div class="mb-4">
+            <div class="section-title">设定总结（大纲）</div>
+            <div class="section-tip">
+              设定总结，即大纲，简要概括故事的主要情节和结构。由AI生成，如果不满意可随意修改或者再次生成。
+              <div style="color: brown">小说信息已变更，建议重新生成大纲</div>
+              <button>重新生成</button>
+            </div>
+
+            <textarea class="form-control" rows="3" placeholder="请填写小说设定总结或大纲"></textarea>
+          </div>
+          <div>
+            <div class="section-title">细纲（章节概要）</div>
+            根据大纲生成细纲
+            <button id="genOutlineBtn">生成细纲</button>
+            <!-- 细纲列表 -->
+            <div id="outlineList" class="mt-3">
+              <!-- 示例项1 -->
+              <div class="outline-item border rounded mb-2 p-2">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div class="flex-grow-1">
+                    <span class="outline-text">
+                      第一章：主角在家乡遭遇变故，被迫踏上修仙之路。家族的灭亡让他背负仇恨，发誓要查明真相。途中遇到神秘老人，获得一枚古老玉佩，玉佩中隐藏着修炼秘籍和未知的秘密，主角开始踏上艰难的修炼之旅，逐步揭开家族被灭的谜团。
+                    </span>
+                  </div>
+                  <div class="ms-2 d-flex align-items-center gap-2">
+                    <button class="btn btn-sm btn-outline-secondary toggle-btn"
+                      onclick="toggleOutline(this)">展开</button>
+                    <button class="btn btn-sm btn-outline-primary">编辑</button>
+                  </div>
+                </div>
+              </div>
+              <!-- 示例项2 -->
+              <div class="outline-item border rounded mb-2 p-2">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div class="flex-grow-1">
+                    <span class="outline-text">
+                      第二章：主角进入宗门，初试炼丹失败，遭遇同门排挤。师父却慧眼识珠，收其为徒。主角在宗门中结识师妹，两人共同面对宗门考核，逐渐建立深厚友谊。主角在修炼过程中发现玉佩的异常，开始探索玉佩的真正来历。
+                    </span>
+                  </div>
+                  <div class="ms-2 d-flex align-items-center gap-2">
+                    <button class="btn btn-sm btn-outline-secondary toggle-btn"
+                      onclick="toggleOutline(this)">展开</button>
+                    <button class="btn btn-sm btn-outline-primary">编辑</button>
+                  </div>
+                </div>
+              </div>
+              <!-- 示例项3 -->
+              <div class="outline-item border rounded mb-2 p-2">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div class="flex-grow-1">
+                    <span class="outline-text">
+                      第三章：宗门大比来临，主角与师妹联手闯关，面对强敌和重重考验。主角在危急时刻激发玉佩力量，逆转战局，获得宗门高层关注。赛后，主角发现玉佩与宗门历史有着千丝万缕的联系，决定深入调查宗门往事，寻找父母被害的线索。
+                    </span>
+                  </div>
+                  <div class="ms-2 d-flex align-items-center gap-2">
+                    <button class="btn btn-sm btn-outline-secondary toggle-btn"
+                      onclick="toggleOutline(this)">展开</button>
+                    <button class="btn btn-sm btn-outline-primary">编辑</button>
+                  </div>
+                </div>
+              </div>
+              <!-- 示例项4 -->
+              <div class="outline-item border rounded mb-2 p-2">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div class="flex-grow-1">
+                    <span class="outline-text">
+                      第四章：主角与师妹外出历练，遭遇神秘敌人追杀。危急关头，主角领悟玉佩中的新技能，成功脱险。两人回宗门后，发现宗门内部暗流涌动，主角被卷入宗门权力斗争，逐渐成长为宗门新星。
+                    </span>
+                  </div>
+                  <div class="ms-2 d-flex align-items-center gap-2">
+                    <button class="btn btn-sm btn-outline-secondary toggle-btn"
+                      onclick="toggleOutline(this)">展开</button>
+                    <button class="btn btn-sm btn-outline-primary">编辑</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <!-- 右侧：AI生成设定 -->
       <div class="col-lg-5 col-12">
-        <div class="ai-gen-setting" style="background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:32px; min-height:400px;">
-          <div>我是墨斗AI辅助创作工具，在此页面我可以帮助你完善小说设定信息哦~</div>
-          <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
-            <button id="aiGenBtn" class="btn btn-primary"><i class="fa-solid fa-rocket"></i> AI一键生成所有设定信息</button>
-            <button id="applyAllBtn" class="btn btn-success" style="display:none;">全部应用</button>
+        <div class="ai-gen-setting" style="
+              background: #fff;
+              border-radius: 12px;
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+              padding: 32px;
+              min-height: 400px;
+            ">
+          <div>
+            我是墨斗AI辅助创作工具，在此页面我可以帮助你完善小说设定信息哦~
           </div>
-          <div id="aiGenSections" style="display:none;">
+          <div>
+            AI默认会根据你选择的小说类型和目标读者随机生成匹配的设定信息。
+          </div>
+          <div>你也可以一句话表述一下你的灵感：</div>
+          <div class="d-flex gap-2 mb-3">
+            <input type="text" class="form-control" placeholder="请输入你的灵感" />
+            <button>导入</button>
+          </div>
+
+          <div class="d-flex justify-content-end align-items-center mb-3 mt-3">
+            <button id="aiGenBtn" class="btn btn-primary">
+              <i class="fa-solid fa-rocket"></i> AI生成设定
+            </button>
+
+          </div>
+          <div id="aiGenSections" style="display: none">
+            <div class="d-flex justify-content-end mb-2 align-items-center">
+              <span class="me-3 text-muted small">点击全部应用后可以在左侧对设定进行修改。</span>
+              <button id="applyAllBtn" class="btn btn-success" style="display: none">
+                全部应用
+              </button>
+            </div>
             <!-- 动态生成设定项 -->
             <div class="mb-3 border-bottom pb-2">
               <div class="fw-bold mb-1">主角信息</div>
-              <div class="mb-1" id="aiTypeValue">萨达萨达是大大苏打实打实大大实打实的</div>
-              <button class="btn btn-outline-primary btn-sm me-2">应用</button>
+              <div class="mb-1" id="aiTypeValue">
+                萨达萨达是大大苏打实打实大大实打实的
+              </div>
+              <button class="btn btn-outline-primary btn-sm me-2">
+                应用
+              </button>
               <button class="btn btn-outline-secondary btn-sm">重新</button>
             </div>
             <div class="mb-3 border-bottom pb-2">
               <div class="fw-bold mb-1">世界观</div>
-              <div class="mb-1" id="aiReaderValue">阿三大苏打实打实的啊实打实打算大苏打阿三是豆腐干士大夫士大夫阿斯顿发射点奥法</div>
-              <button class="btn btn-outline-primary btn-sm me-2">应用</button>
+              <div class="mb-1" id="aiReaderValue">
+                阿三大苏打实打实的啊实打实打算大苏打阿三是豆腐干士大夫士大夫阿斯顿发射点奥法
+              </div>
+              <button class="btn btn-outline-primary btn-sm me-2">
+                应用
+              </button>
               <button class="btn btn-outline-secondary btn-sm">重新</button>
             </div>
             <div class="mb-3 border-bottom pb-2">
               <div class="fw-bold mb-1">配角信息</div>
-              <div class="mb-1" id="aiMainCharValue">贫苦家庭，目标：修仙</div>
-              <button class="btn btn-outline-primary btn-sm me-2">应用</button>
+              <div class="mb-1" id="aiMainCharValue">
+                贫苦家庭，目标：修仙
+              </div>
+              <button class="btn btn-outline-primary btn-sm me-2">
+                应用
+              </button>
               <button class="btn btn-outline-secondary btn-sm">重新</button>
             </div>
             <div class="mb-3 border-bottom pb-2">
               <div class="fw-bold mb-1">大纲</div>
-              <div class="mb-1" id="aiOutlineValue">啊实打实大苏打实打实大撒大撒大苏打撒旦啊实打实大苏打实打实的</div>
-              <button class="btn btn-outline-primary btn-sm me-2">应用</button>
+              <div class="mb-1" id="aiOutlineValue">
+                啊实打实大苏打实打实大撒大撒大苏打撒旦啊实打实大苏打实打实的
+              </div>
+              <button class="btn btn-outline-primary btn-sm me-2">
+                应用
+              </button>
             </div>
             <!-- 可继续添加其它设定项 -->
           </div>
@@ -825,112 +640,104 @@
     </div>
   </main>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-      // 情绪强度滑块显示
-      const emotionRange = document.getElementById("emotionRange");
-      const emotionValue = document.getElementById("emotionValue");
-      if (emotionRange && emotionValue) {
-        emotionRange.addEventListener("input", function () {
-          emotionValue.textContent = emotionRange.value;
-        });
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // 情绪强度滑块显示
+    const emotionRange = document.getElementById("emotionRange");
+    const emotionValue = document.getElementById("emotionValue");
+    if (emotionRange && emotionValue) {
+      emotionRange.addEventListener("input", function () {
         emotionValue.textContent = emotionRange.value;
-      }
-
-    // 显示/隐藏loading覆盖层
-    function showOutlineLoading(show) {
-      const loading = document.getElementById('outlineLoading');
-      if (loading) loading.style.display = show ? 'flex' : 'none';
-    }
-
-    // 示例：弹窗弹出时先显示loading，2秒后隐藏并显示内容
-    document.getElementById('saveOutlineBtn').addEventListener('click', function() {
-      renderOutlineList();
-      const modalEl = document.getElementById('outlineModal');
-      const modal = new bootstrap.Modal(modalEl);
-      showOutlineLoading(true);
-      modal.show();
-      setTimeout(() => {
-        showOutlineLoading(false);
-      }, 2000); // 2秒后隐藏loading
-    });
-    // 细纲数据示例
-    const outlineData = [
-      {chapter: '第一章', content: '主角穿越异界，初遇贵人'},
-      {chapter: '第二章', content: '拜入门派，结识同门'},
-      {chapter: '第三章', content: '初试炼，展现天赋'},
-      {chapter: '第四章', content: '遭遇危机，逆境成长'},
-      {chapter: '第五章', content: '获得机缘，实力大增'}
-    ];
-
-    // 渲染细纲列表
-    function renderOutlineList() {
-      const list = document.getElementById('outlineList');
-      if (!list) return;
-      list.innerHTML = '';
-      outlineData.forEach((item, idx) => {
-        const li = document.createElement('li');
-        li.className = 'list-group-item d-flex justify-content-between align-items-center';
-        li.innerHTML = `<span><b>${item.chapter}：</b>${item.content}</span> <button class='btn btn-outline-primary btn-sm'>编辑</button>`;
-        list.appendChild(li);
       });
+      emotionValue.textContent = emotionRange.value;
     }
 
-    // 保存按钮弹出细纲弹窗
-    document.getElementById('saveOutlineBtn').addEventListener('click', function() {
-      renderOutlineList();
-      const modal = new bootstrap.Modal(document.getElementById('outlineModal'));
-      modal.show();
-    });
-
-    // 已在前面声明并初始化 emotionRange 和 emotionValue，无需重复声明
-
-      // // AI生成按钮逻辑
-      // function checkAiGenEnable() {
-      //   // 检查小说类型和读者定位是否已选择
-      //   const typeSelect = document.querySelector('.setting-section select');
-      //   const readerRadios = document.querySelectorAll('input[name="readerType"]');
-      //   let typeSelected = typeSelect && typeSelect.value;
-      //   let readerSelected = Array.from(readerRadios).some(r => r.checked);
-      //   document.getElementById('aiGenBtn').disabled = !(typeSelected && readerSelected);
-      // }
-      // document.querySelector('.setting-section select').addEventListener('change', checkAiGenEnable);
-      // document.querySelectorAll('input[name="readerType"]').forEach(r => r.addEventListener('change', checkAiGenEnable));
-
-      // AI生成按钮点击
-      document
-        .getElementById("aiGenBtn")
-        .addEventListener("click", function () {
-          document.getElementById("aiGenSections").style.display = "block";
-          document.getElementById("applyAllBtn").style.display = "inline-block";
-          // 可根据实际设定项填充内容
-        });
-
-      // 示例：展开/收起逻辑
-      function toggleOutline(btn) {
-        const item = btn.closest('.outline-item');
-        const textSpan = item.querySelector('.outline-text');
-        if (btn.textContent === '展开') {
-          textSpan.style.whiteSpace = 'normal';
-          textSpan.style.overflow = 'visible';
-          textSpan.style.display = 'block';
-          btn.textContent = '收起';
+    // 故事规模输入框逻辑
+    const wordCountInput = document.getElementById("wordCountInput");
+    const chapterCountTip = document.getElementById("chapterCountTip");
+    const wordCountError = document.getElementById("wordCountError");
+    if (wordCountInput) {
+      wordCountInput.addEventListener("input", function () {
+        const val = wordCountInput.value;
+        const num = Number(val);
+        wordCountError.style.display = "none";
+        chapterCountTip.style.display = "none";
+        if (!isNaN(num) && num > 0) {
+          // 计算章节数
+          const totalWords = num * 10000;
+          const chapters = Math.round(totalWords / 2000);
+          chapterCountTip.textContent = `约${chapters}章。`;
+          chapterCountTip.style.display = "block";
+          // 错误提示
+          if (num >= 1000) {
+            wordCountError.textContent = `确定要创作${num}万字（约一千万字）的小说吗？`;
+            wordCountError.style.display = "block";
+          }
         } else {
-          textSpan.style.whiteSpace = 'nowrap';
-          textSpan.style.overflow = 'hidden';
-          textSpan.style.textOverflow = 'ellipsis';
-          textSpan.style.display = 'inline';
-          btn.textContent = '展开';
+          chapterCountTip.style.display = "none";
+          wordCountError.style.display = "none";
         }
-      }
-      // 初始化所有细纲项为收起状态
-      document.querySelectorAll('.outline-text').forEach(function(span){
-        span.style.whiteSpace = 'nowrap';
-        span.style.overflow = 'hidden';
-        span.style.textOverflow = 'ellipsis';
-        span.style.display = 'inline';
       });
-    </script>
-  </body>
+    }
+
+    // // AI生成按钮逻辑
+    // function checkAiGenEnable() {
+    //   // 检查小说类型和读者定位是否已选择
+    //   const typeSelect = document.querySelector('.setting-section select');
+    //   const readerRadios = document.querySelectorAll('input[name="readerType"]');
+    //   let typeSelected = typeSelect && typeSelect.value;
+    //   let readerSelected = Array.from(readerRadios).some(r => r.checked);
+    //   document.getElementById('aiGenBtn').disabled = !(typeSelected && readerSelected);
+    // }
+    // document.querySelector('.setting-section select').addEventListener('change', checkAiGenEnable);
+    // document.querySelectorAll('input[name="readerType"]').forEach(r => r.addEventListener('change', checkAiGenEnable));
+
+    // AI生成按钮点击
+    document
+      .getElementById("aiGenBtn")
+      .addEventListener("click", function () {
+        document.getElementById("aiGenSections").style.display = "block";
+        document.getElementById("applyAllBtn").style.display = "inline-block";
+        // 可根据实际设定项填充内容
+      });
+
+    // 示例：展开/收起逻辑
+    function toggleOutline(btn) {
+      const item = btn.closest('.outline-item');
+      const textSpan = item.querySelector('.outline-text');
+      if (btn.textContent === '展开') {
+        textSpan.style.whiteSpace = 'normal';
+        textSpan.style.overflow = 'visible';
+        textSpan.style.display = 'block';
+        btn.textContent = '收起';
+      } else {
+        textSpan.style.whiteSpace = 'nowrap';
+        textSpan.style.overflow = 'hidden';
+        textSpan.style.textOverflow = 'ellipsis';
+        textSpan.style.display = 'inline';
+        btn.textContent = '展开';
+      }
+    }
+    // 初始化所有细纲项为收起状态
+    document.querySelectorAll('.outline-text').forEach(function (span) {
+      span.style.whiteSpace = 'nowrap';
+      span.style.overflow = 'hidden';
+      span.style.textOverflow = 'ellipsis';
+      span.style.display = 'inline';
+    });
+
+    // 限制口癖例句最多两行（如果用户粘贴或输入超过两行，会截断为前两行）
+    const koupiExample = document.getElementById('mainCharKoupiExample');
+    if (koupiExample) {
+      koupiExample.addEventListener('input', function () {
+        const lines = koupiExample.value.split(/\r\n|\r|\n/);
+        if (lines.length > 2) {
+          koupiExample.value = lines.slice(0, 2).join('\n');
+        }
+      });
+    }
+  </script>
+</body>
+
 </html>

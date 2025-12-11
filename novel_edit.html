@@ -90,8 +90,11 @@
       <div class="col-lg-7 col-12">
         <div class="editor-section h-100">
           <label class="form-label mb-2" for="richEditor">正文编辑</label>
-          <textarea id="richEditor" class="form-control" style="height:calc(80vh - 40px); resize:none;"
-            placeholder="在此编辑正文内容..."></textarea>
+          <!-- 使用 contenteditable 替代 textarea 以支持行内样式（灰色提示 + 可点击的浅蓝下划线） -->
+          <div id="richEditor" class="form-control" contenteditable="true"
+            style="height:calc(80vh - 40px); resize:none; overflow:auto;" data-placeholder="在此编辑正文内容...">
+            大苏打啊阿松大阿松大&nbsp;&nbsp;<span style="color:#999;">没有思路？试试：</span><span id="aiContinue" style="color:#3db8ff; text-decoration:underline; cursor:pointer;">AI续写</span>
+          </div>
         </div>
       </div>
       <!-- 右侧：功能区 -->
