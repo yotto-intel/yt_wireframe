@@ -1,0 +1,392 @@
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>我的风格库 - 墨斗网文写作工具</title>
+		<!-- Font Awesome for icons -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+			<style>
+				/* 基本 header 样式，后续可迁移到独立的 css 文件 */
+				:root{--bg:#ffffff;--muted:#666;--accent:#2b87f0}
+				body{font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; margin:0; background:#f7f8fa; color:#222}
+				.header{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:var(--bg);border-bottom:1px solid #ececec;box-shadow:0 1px 0 rgba(0,0,0,0.02);z-index:30}
+				.header-logo{font-size:18px;color:#222;display:flex;align-items:center;gap:10px;font-weight:600}
+				.header-logo i{color:var(--accent);font-size:20px}
+				.header-menu{display:flex;align-items:center;gap:6px}
+				.header-menu a{color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:6px;transition:all .15s}
+				.header-menu a:hover{color:#111;background:#f2f6ff}
+				.header-menu a.active{color:#0b66d1;background:#eaf3ff;font-weight:600}
+				/* 抽屉与遮罩 */
+				.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.32);opacity:0;visibility:hidden;transition:opacity .2s ease, visibility .2s;z-index:40}
+				.overlay.open{opacity:1;visibility:visible}
+				.drawer{position:fixed;top:0;right:0;bottom:0;width:50vw;max-width:960px;background:var(--bg);box-shadow:-8px 0 24px rgba(12,24,48,0.12);transform:translateX(100%);transition:transform .25s ease;z-index:50;display:flex;flex-direction:column}
+				.drawer.open{transform:translateX(0)}
+				.drawer-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #eee}
+				.drawer-header h2{margin:0;font-size:18px}
+				.drawer-close{background:transparent;border:0;font-size:26px;line-height:1;color:#888;cursor:pointer;padding:4px 8px}
+				.drawer-body{padding:18px 20px;overflow:auto}
+				/* 主内容保留但不可见（当前以抽屉为主） */
+				main{padding:24px;min-height:200px}
+				/* 风格列表项样式 */
+				.style-list{list-style:none;margin:12px 0;padding:0;display:block}
+				.style-item{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 10px;border-bottom:1px solid #f0f0f0}
+				.style-main{flex:1;min-width:0}
+				.style-title{font-size:16px;font-weight:600;margin-bottom:8px}
+				.style-tags{display:flex;flex-wrap:wrap;gap:8px}
+				.tag{font-size:12px;padding:6px 8px;border-radius:12px;background:#f5f6f8;color:#666;border:1px solid #eee}
+				.tag.has{background:#eaf3ff;color:#0b66d1;border-color:#d7eafc}
+				.tag.missing{background:#fff5f5;color:#c0392b;border-color:#ffd6d6}
+				.style-actions{margin-left:12px;position:relative}
+				.more-btn{background:transparent;border:0;font-size:20px;cursor:pointer;padding:6px 8px}
+				.more-menu{position:absolute;right:0;top:28px;background:#fff;border:1px solid #eee;border-radius:6px;box-shadow:0 6px 18px rgba(12,24,48,0.08);display:none;min-width:120px;z-index:80}
+				.more-menu[aria-hidden="false"]{display:block}
+				.more-menu button{display:block;width:100%;padding:10px 12px;border:0;background:transparent;text-align:left;cursor:pointer}
+				.more-menu button:hover{background:#f5f7fb}
+				/* 响应式：小屏幕抽屉占满 */
+				@media (max-width:768px){
+					.drawer{width:100vw}
+				}
+
+				/* 新增弹窗（大尺寸，全屏覆盖） */
+				.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:1200;visibility:hidden;opacity:0;transition:opacity .18s ease, visibility .18s}
+				.modal[aria-hidden="false"]{visibility:visible;opacity:1}
+				.modal-content{background:var(--bg);width:100vw;height:100vh;margin:0;border-radius:0;box-shadow:0 12px 36px rgba(12,24,48,0.18);display:flex;flex-direction:column;overflow:auto}
+				.modal-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #eee}
+				.modal-header h3{margin:0}
+				.modal-close{background:transparent;border:0;font-size:26px;cursor:pointer;color:#888}
+				.modal-body{padding:18px 20px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:12px}
+				.field{display:flex;flex-direction:column;gap:6px}
+				.field span{font-size:13px;color:#444}
+				.field input[type="text"], .field textarea, .field select{padding:8px 10px;border:1px solid #e6e6e6;border-radius:6px;font-size:14px}
+				.catchphrase-row{display:flex;gap:8px;align-items:center}
+				.catch-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+				.catch-chip{padding:6px 8px;background:#f2f7f0;border-radius:12px;border:1px solid #e6efd9;font-size:13px}
+				.modal-actions{display:flex;justify-content:flex-end;gap:10px;padding-top:6px}
+				.modal-actions button{padding:8px 12px;border-radius:6px;border:1px solid #dfe6f6;background:#fff;cursor:pointer}
+				.modal-actions button#modal-save{background:var(--accent);color:#fff;border-color:var(--accent)}
+			</style>
+	</head>
+	<body>
+		<div class="header">
+			<div class="header-logo">
+				<i class="fa-solid fa-book-open"></i>
+				墨斗网文写作工具
+			</div>
+			<nav class="header-menu" aria-label="主导航">
+				<a href="#">书架</a>
+				<a href="#">角色库</a>
+				<a href="#">灵感库</a>
+				<a href="#" id="menu-style" class="active">风格库[vip]</a>
+				<a href="#">会员服务</a>
+				<a href="#">个人中心</a>
+			</nav>
+		</div>
+
+		<!-- 抽屉布局：遮罩 + 右侧占 50% 的抽屉 -->
+		<div class="overlay" id="drawer-overlay"></div>
+		<aside class="drawer open" id="style-drawer" role="dialog" aria-label="风格库抽屉">
+			<div class="drawer-header">
+				<h2>我的风格库</h2>
+				<button id="add-style-btn" class="add-btn">新增</button>
+				<button class="drawer-close" id="drawer-close" aria-label="关闭">&times;</button>
+			</div>
+			<div class="drawer-body">
+				<p>这是右侧抽屉区域（占屏幕宽度的 50%）。在此处可以展示风格列表、筛选和预览内容。</p>
+				<ul class="style-list" id="style-list">
+					<li class="style-item" data-id="s1">
+						<div class="style-main">
+							<div class="style-title">古风婉约体</div>
+							<div class="style-tags">
+								<span class="tag has">例文 √</span>
+								<span class="tag has">风格简述 √</span>
+								<span class="tag has">用词习惯 √</span>
+								<span class="tag missing">口癖 ×</span>
+								<span class="tag missing">叙事手法 ×</span>
+							</div>
+						</div>
+						<div class="style-actions">
+							<button class="more-btn" aria-expanded="false" aria-controls="more-menu-s1">⋯</button>
+							<div class="more-menu" id="more-menu-s1" aria-hidden="true">
+								<button class="more-edit">编辑</button>
+								<button class="more-delete">删除</button>
+							</div>
+						</div>
+					</li>
+
+					<li class="style-item" data-id="s2">
+						<div class="style-main">
+							<div class="style-title">现代爽文体</div>
+							<div class="style-tags">
+								<span class="tag has">例文 √</span>
+								<span class="tag missing">风格简述 ×</span>
+								<span class="tag has">用词习惯 √</span>
+								<span class="tag missing">口癖 ×</span>
+								<span class="tag has">叙事手法 √</span>
+							</div>
+						</div>
+						<div class="style-actions">
+							<button class="more-btn" aria-expanded="false" aria-controls="more-menu-s2">⋯</button>
+							<div class="more-menu" id="more-menu-s2" aria-hidden="true">
+								<button class="more-edit">编辑</button>
+								<button class="more-delete">删除</button>
+							</div>
+						</div>
+					</li>
+
+					<li class="style-item" data-id="s3">
+						<div class="style-main">
+							<div class="style-title">悬疑低调派</div>
+							<div class="style-tags">
+								<span class="tag missing">例文 ×</span>
+								<span class="tag has">风格简述 √</span>
+								<span class="tag missing">用词习惯 ×</span>
+								<span class="tag has">口癖 √</span>
+								<span class="tag has">叙事手法 √</span>
+							</div>
+						</div>
+						<div class="style-actions">
+							<button class="more-btn" aria-expanded="false" aria-controls="more-menu-s3">⋯</button>
+							<div class="more-menu" id="more-menu-s3" aria-hidden="true">
+								<button class="more-edit">编辑</button>
+								<button class="more-delete">删除</button>
+							</div>
+						</div>
+					</li>
+				</ul>
+
+				
+			</div>
+		</aside>
+
+		<!-- 新增风格弹窗（移动到顶层以覆盖整个屏幕） -->
+		<div class="modal" id="modal-add" role="dialog" aria-labelledby="modal-add-title" aria-hidden="true">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 id="modal-add-title">新增风格</h3>
+					<button class="modal-close" id="modal-close" aria-label="关闭">&times;</button>
+				</div>
+				<form id="add-form" class="modal-body">
+					<label class="field"><span>风格名字</span><input type="text" id="fld-name" required /></label>
+					<label class="field"><span>例文</span><textarea id="fld-example" rows="6"></textarea></label>
+					<label class="field"><span>风格简述</span><input type="text" id="fld-desc" /></label>
+					<label class="field"><span>用词习惯</span><input type="text" id="fld-vocab" /></label>
+					<div class="field">
+						<span>口癖</span>
+						<div class="catchphrase-row">
+							<select id="fld-catch-type">
+								<option value="常用">常用</option>
+								<option value="开头">开头</option>
+								<option value="结尾">结尾</option>
+								<option value="其它">其它</option>
+							</select>
+							<input type="text" id="fld-catch-text" placeholder="输入口癖并点击添加" />
+							<button type="button" id="add-catch">添加</button>
+						</div>
+						<div class="catch-list" id="catch-list"></div>
+					</div>
+					<label class="field"><span>叙事手法</span><input type="text" id="fld-narration" /></label>
+					<div class="modal-actions">
+						<button type="button" id="modal-cancel">取消</button>
+						<button type="submit" id="modal-save">保存</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<main aria-hidden="true">
+			<!-- 主站内容如果需要保留，可放在这里；当前页面以抽屉为主 -->
+		</main>
+<script>
+			// 抽屉切换逻辑
+			document.addEventListener('DOMContentLoaded', function(){
+				const menuStyle = document.getElementById('menu-style');
+				const drawer = document.getElementById('style-drawer');
+				const overlay = document.getElementById('drawer-overlay');
+				const btnClose = document.getElementById('drawer-close');
+				function setOpen(open){
+					if(open){
+						drawer.classList.add('open');
+						overlay.classList.add('open');
+						drawer.setAttribute('aria-hidden','false');
+						document.querySelector('main').setAttribute('aria-hidden','true');
+					}else{
+						drawer.classList.remove('open');
+						overlay.classList.remove('open');
+						drawer.setAttribute('aria-hidden','true');
+						document.querySelector('main').setAttribute('aria-hidden','false');
+					}
+				}
+				// 初始化：如果 drawer 带 open 类则打开 overlay
+				setOpen(drawer.classList.contains('open'));
+				menuStyle && menuStyle.addEventListener('click', function(e){
+					e.preventDefault();
+					setOpen(true);
+				});
+				overlay && overlay.addEventListener('click', function(){ setOpen(false); });
+				btnClose && btnClose.addEventListener('click', function(){ setOpen(false); });
+
+				// 风格列表：more 菜单逻辑（事件委托）
+				const styleList = document.getElementById('style-list');
+				let openMenu = null;
+				document.addEventListener('click', function(e){
+					// 点击 more 按钮
+					const mb = e.target.closest('.more-btn');
+					if(mb && styleList && styleList.contains(mb)){
+						e.stopPropagation();
+						const menuId = mb.getAttribute('aria-controls');
+						const menu = document.getElementById(menuId);
+						const isOpen = menu && menu.getAttribute('aria-hidden') === 'false';
+						// 先关闭已打开的菜单
+						if(openMenu && openMenu !== menu){
+							openMenu.setAttribute('aria-hidden','true');
+							openMenu.previousElementSibling && openMenu.previousElementSibling.setAttribute('aria-expanded','false');
+							openMenu = null;
+						}
+						if(menu){
+							menu.setAttribute('aria-hidden', isOpen ? 'true' : 'false');
+							mb.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+							openMenu = isOpen ? null : menu;
+						}
+						return;
+					}
+					// 点击编辑
+					const editBtn = e.target.closest('.more-edit');
+					if(editBtn){
+						e.stopPropagation();
+						const item = editBtn.closest('.style-item');
+						if(item){
+							// TODO: replace with real edit flow
+							alert('编辑：' + item.querySelector('.style-title').textContent);
+						}
+						return;
+					}
+					// 点击删除
+					const delBtn = e.target.closest('.more-delete');
+					if(delBtn){
+						e.stopPropagation();
+						const item = delBtn.closest('.style-item');
+						if(item){
+							const name = item.querySelector('.style-title').textContent;
+							if(confirm('确认删除风格：' + name + ' ?')){
+								item.parentNode.removeChild(item);
+							}
+						}
+						return;
+					}
+					// 点击其它位置，关闭打开的菜单
+					if(openMenu){
+						openMenu.setAttribute('aria-hidden','true');
+						openMenu.previousElementSibling && openMenu.previousElementSibling.setAttribute('aria-expanded','false');
+						openMenu = null;
+					}
+				});
+
+				// 键盘支持：Esc 关闭抽屉或菜单
+				document.addEventListener('keydown', function(e){
+					if(e.key === 'Escape'){
+						if(openMenu){
+							openMenu.setAttribute('aria-hidden','true');
+							openMenu.previousElementSibling && openMenu.previousElementSibling.setAttribute('aria-expanded','false');
+							openMenu = null;
+						}else if(drawer.classList.contains('open')){
+							setOpen(false);
+						}
+					}
+				});
+
+					// 新增弹窗逻辑
+					const addBtn = document.getElementById('add-style-btn');
+					const modal = document.getElementById('modal-add');
+					const modalClose = document.getElementById('modal-close');
+					const modalCancel = document.getElementById('modal-cancel');
+					const addCatchBtn = document.getElementById('add-catch');
+					const catchList = document.getElementById('catch-list');
+					const fldCatchText = document.getElementById('fld-catch-text');
+					const fldCatchType = document.getElementById('fld-catch-type');
+					const addForm = document.getElementById('add-form');
+
+					function openModal(){
+						modal.setAttribute('aria-hidden','false');
+						document.body.style.overflow = 'hidden';
+						setTimeout(()=>document.getElementById('fld-name').focus(),50);
+					}
+					function closeModal(){
+						modal.setAttribute('aria-hidden','true');
+						document.body.style.overflow = '';
+						// reset form
+						addForm.reset();
+						catchList.innerHTML = '';
+					}
+
+					addBtn && addBtn.addEventListener('click', function(){
+						openModal();
+					});
+					modalClose && modalClose.addEventListener('click', closeModal);
+					modalCancel && modalCancel.addEventListener('click', closeModal);
+					// 点击 modal 背景关闭
+					modal && modal.addEventListener('click', function(e){
+						if(e.target === modal) closeModal();
+					});
+
+					// 添加口癖到列表
+					addCatchBtn && addCatchBtn.addEventListener('click', function(){
+						const text = fldCatchText.value.trim();
+						const type = fldCatchType.value;
+						if(!text) return;
+						const chip = document.createElement('span');
+						chip.className = 'catch-chip';
+						chip.textContent = type + ': ' + text;
+						chip.dataset.type = type;
+						chip.dataset.text = text;
+						// 支持点击删除 chip
+						chip.addEventListener('click', function(){ chip.parentNode.removeChild(chip); });
+						catchList.appendChild(chip);
+						fldCatchText.value = '';
+						fldCatchText.focus();
+					});
+
+					// 保存表单，生成新项
+					addForm && addForm.addEventListener('submit', function(e){
+						e.preventDefault();
+						const name = (document.getElementById('fld-name').value || '').trim();
+						if(!name){ alert('请填写风格名字'); return; }
+						const example = (document.getElementById('fld-example').value || '').trim();
+						const desc = (document.getElementById('fld-desc').value || '').trim();
+						const vocab = (document.getElementById('fld-vocab').value || '').trim();
+						const narration = (document.getElementById('fld-narration').value || '').trim();
+						const catches = Array.from(catchList.children).map(c=>({type:c.dataset.type,text:c.dataset.text}));
+
+						// create id
+						const id = 's' + Date.now();
+						const li = document.createElement('li');
+						li.className = 'style-item';
+						li.dataset.id = id;
+						// build tags
+						function tagHtml(name, present){
+							return '<span class="tag ' + (present? 'has':'missing') + '">' + name + (present? ' √':' ×') + '</span>';
+						}
+						let tagsHtml = '';
+						tagsHtml += tagHtml('例文', !!example);
+						tagsHtml += tagHtml('风格简述', !!desc);
+						tagsHtml += tagHtml('用词习惯', !!vocab);
+						tagsHtml += tagHtml('口癖', catches.length>0);
+						tagsHtml += tagHtml('叙事手法', !!narration);
+
+						li.innerHTML = '\n\t\t\t\t\t<div class="style-main">\n\t\t\t\t\t\t<div class="style-title">' + escapeHtml(name) + '</div>\n\t\t\t\t\t\t<div class="style-tags">' + tagsHtml + '</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class="style-actions">\n\t\t\t\t\t\t<button class="more-btn" aria-expanded="false" aria-controls="more-menu-' + id + '">⋯</button>\n\t\t\t\t\t\t<div class="more-menu" id="more-menu-' + id + '" aria-hidden="true">\n\t\t\t\t\t\t\t<button class="more-edit">编辑</button>\n\t\t\t\t\t\t\t<button class="more-delete">删除</button>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>';
+
+						styleList.appendChild(li);
+
+						// close modal and reset
+						closeModal();
+					});
+
+					// escape helper
+					function escapeHtml(str){
+						return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+					}
+			});
+		</script>
+	</body>
+</html>

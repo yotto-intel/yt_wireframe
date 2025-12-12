@@ -32,6 +32,7 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
       padding: 24px;
       height: 80vh;
+      overflow: auto; /* allow internal scrolling so we can reset on tab change */
       display: flex;
       flex-direction: column;
       gap: 24px;
@@ -80,6 +81,22 @@
     .select-item:last-child {
       border-bottom: none;
     }
+
+    /* De-AI (VIP) styles */
+    .deai-preview {border:1px solid #eee;border-radius:8px;padding:12px;background:#fff}
+    .deai-style-title{font-weight:600;font-size:16px;margin-bottom:8px}
+    .deai-tags{display:flex;gap:8px;flex-wrap:wrap}
+    .deai-tag{font-size:12px;padding:6px 8px;border-radius:12px;background:#f5f6f8;color:#666;border:1px solid #eee}
+    .deai-tag.has{background:#eaf3ff;color:#0b66d1;border-color:#d7eafc}
+    .deai-tag.missing{background:#fff5f5;color:#c0392b;border-color:#ffd6d6}
+  /* Big De-AI modal */
+  /* make dialog itself wide (override bootstrap max-width) */
+  .big-modal .modal-dialog{max-width:none;width:80vw;margin:0 auto}
+  .big-modal .modal-content{width:100%;height:90vh;margin:0;border-radius:10px;overflow:hidden}
+    .big-modal .diff-columns{display:flex;height:calc(100% - 88px);gap:12px}
+    .big-modal .diff-column{flex:1;border:1px solid #eee;border-radius:6px;overflow:auto;padding:12px;background:#fff}
+    .big-modal .diff-column pre{white-space:pre-wrap;font-family:inherit}
+    .big-modal .diff-mark{background:#fff3b0}
   </style>
 </head>
 
@@ -100,71 +117,145 @@
       <!-- 右侧：功能区 -->
       <div class="col-lg-5 col-12">
         <div class="side-section h-100">
-          <!-- 新增元素：本章细纲 -->
-          <div>
-            <div class="mb-4">
-              <h4 class="fw-bold mb-0">本章细纲：</h4>
-            </div>
-            <div class="mb-3" id="chapterOutline"
-              style="background:#fafbfc; border:1px solid #eee; border-radius:8px; padding:12px;">
-              这是本章的细纲内容，可以在这里展示章节的主要结构或要点。
-              <button class="btn btn-sm btn-primary me-2">编辑</button>
-            </div>
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs mb-3" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="tab-config-btn" data-bs-toggle="tab" data-bs-target="#tab-config" type="button" role="tab" aria-controls="tab-config" aria-selected="true">剧情配置</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="tab-deai-btn" data-bs-toggle="tab" data-bs-target="#tab-deai" type="button" role="tab" aria-controls="tab-deai" aria-selected="false">去AI味儿【vip】</button>
+            </li>
+          </ul>
 
-            <!-- 元素1+2+3合并为一个卡片 -->
-            <h4 class="fw-bold mb-0">本章剧情配置：</h4>
-            <div class="card mb-3"
-              style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #eee;">
-              <div class="card-body" style="padding: 20px;">
-                <!-- 新增卡片大标题 -->
-                <!-- 视觉优化：来源区块纵向排列，色块和线条突出来源关系 -->
-                <div class="mb-2 fw-bold">本章剧情列表（可拖动排序）</div>
-                <div id="sortableList" class="sortable-list mb-2">
-                  <!-- 动态生成 -->
+          <div class="tab-content" style="flex:1; display:flex; flex-direction:column;">
+            <!-- 原有右侧内容作为第一个 tab-pane （剧情配置） -->
+            <div class="tab-pane fade show active h-100" id="tab-config" role="tabpanel" aria-labelledby="tab-config-btn">
+              <!-- 新增元素：本章细纲 -->
+              <div>
+                <div class="mb-4">
+                  <h4 class="fw-bold mb-0">本章细纲：</h4>
                 </div>
-                <!-- 来源区块 -->
-                <div class="mt-0 mb-2 position-relative" style="padding-left:32px;">
-                  <!-- 竖线连接 -->
-                  <div style="position:absolute;left:14px;top:0;bottom:0;width:4px;background:linear-gradient(to bottom,#2563eb 60%,#059669 100%);border-radius:2px;"></div>
-                  <!-- 来源提示语 -->
-                  <div class="mb-1 ps-1 fw-bold text-secondary" style="font-size:1.05rem;letter-spacing:1px;">
-                    <i class="fa-solid fa-arrow-down me-1"></i>剧情列表来源：
-                  </div>
-                  <!-- 自定义剧情来源色块 -->
-                  <div class="mb-3 p-3" style="background:#2563eb;border-radius:8px;box-shadow:0 2px 8px #0002;">
-                    <div class="mb-2 fw-bold text-light"><i class="fa fa-pen me-1"></i>自定义剧情</div>
-                    <div class="input-group">
-                      <textarea id="fragmentInput" class="form-control" rows="3" style="resize:vertical;" placeholder="输入自定义剧情内容"></textarea>
-                      <button id="addFragmentBtn" class="btn btn-light ms-2">确定</button>
-                    </div>
-                  </div>
-                  <!-- AI推荐剧情来源色块 -->
-                  <div class="mb-1 p-3" style="background:#059669;border-radius:8px;box-shadow:0 2px 8px #0002;">
-                    <div class="mb-2 fw-bold d-flex align-items-center justify-content-between text-light"><i class="fa fa-robot me-1"></i>AI推荐剧情
-                      <button class="btn btn-sm btn-outline-light ms-2">重新生成</button>
-                    </div>
-                    <div id="selectList" class="select-list" style="background:#fff;">
+                <div class="mb-3" id="chapterOutline" style="background:#fafbfc; border:1px solid #eee; border-radius:8px; padding:12px;">
+                  这是本章的细纲内容，可以在这里展示章节的主要结构或要点。
+                  <button class="btn btn-sm btn-primary me-2">编辑</button>
+                </div>
+
+                <!-- 元素1+2+3合并为一个卡片 -->
+                <h4 class="fw-bold mb-0">本章剧情配置：</h4>
+                <div class="card mb-3" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #eee;">
+                  <div class="card-body" style="padding: 20px;">
+                    <!-- 新增卡片大标题 -->
+                    <!-- 视觉优化：来源区块纵向排列，色块和线条突出来源关系 -->
+                    <div class="mb-2 fw-bold">本章剧情列表（可拖动排序）</div>
+                    <div id="sortableList" class="sortable-list mb-2">
                       <!-- 动态生成 -->
                     </div>
+                    <!-- 来源区块 -->
+                    <div class="mt-0 mb-2 position-relative" style="padding-left:32px;">
+                      <!-- 竖线连接 -->
+                      <div style="position:absolute;left:14px;top:0;bottom:0;width:4px;background:linear-gradient(to bottom,#2563eb 60%,#059669 100%);border-radius:2px;"></div>
+                      <!-- 来源提示语 -->
+                      <div class="mb-1 ps-1 fw-bold text-secondary" style="font-size:1.05rem;letter-spacing:1px;">
+                        <i class="fa-solid fa-arrow-down me-1"></i>剧情列表来源：
+                      </div>
+                      <!-- 自定义剧情来源色块 -->
+                      <div class="mb-3 p-3" style="background:#2563eb;border-radius:8px;box-shadow:0 2px 8px #0002;">
+                        <div class="mb-2 fw-bold text-light"><i class="fa fa-pen me-1"></i>自定义剧情</div>
+                        <div class="input-group">
+                          <textarea id="fragmentInput" class="form-control" rows="3" style="resize:vertical;" placeholder="输入自定义剧情内容"></textarea>
+                          <button id="addFragmentBtn" class="btn btn-light ms-2">确定</button>
+                        </div>
+                      </div>
+                      <!-- AI推荐剧情来源色块 -->
+                      <div class="mb-1 p-3" style="background:#059669;border-radius:8px;box-shadow:0 2px 8px #0002;">
+                        <div class="mb-2 fw-bold d-flex align-items-center justify-content-between text-light"><i class="fa fa-robot me-1"></i>AI推荐剧情
+                          <button class="btn btn-sm btn-outline-light ms-2">重新生成</button>
+                        </div>
+                        <div id="selectList" class="select-list" style="background:#fff;">
+                          <!-- 动态生成 -->
+                        </div>
+                      </div>
+                      <div class="text-secondary small ps-2 pt-1"><i class="fa-solid fa-arrow-up me-1"></i>可点击“选择”或“确定”将内容加入上方剧情列表</div>
+                    </div>
                   </div>
-                  <div class="text-secondary small ps-2 pt-1"><i class="fa-solid fa-arrow-up me-1"></i>可点击“选择”或“确定”将内容加入上方剧情列表</div>
+                </div>
+                <!-- 新增底部AI生成按钮 -->
+                <div class="d-flex mt-auto align-items-center gap-2">
+                  <span data-bs-toggle="tooltip" data-bs-placement="top" title="AI会根据本章细纲，以及剧情配置中的剧情列表（按顺序）生成本章内容。" style="cursor: pointer;">
+                    <i class="fa-solid fa-circle-question text-secondary"></i>
+                  </span>
+                  <button class="btn btn-success w-100" id="aiGenChapterBtn">
+                    <i class="fa-solid fa-robot"></i> AI生成本章内容
+                  </button>
                 </div>
               </div>
             </div>
-            <!-- 新增底部AI生成按钮 -->
-            <div class="d-flex mt-auto align-items-center gap-2">
-              <span data-bs-toggle="tooltip" data-bs-placement="top" title="AI会根据本章细纲，以及剧情配置中的剧情列表（按顺序）生成本章内容。"
-                style="cursor: pointer;">
-                <i class="fa-solid fa-circle-question text-secondary"></i>
-              </span>
-              <button class="btn btn-success w-100" id="aiGenChapterBtn">
-                <i class="fa-solid fa-robot"></i> AI生成本章内容
-              </button>
+
+            <!-- 新增的 VIP tab-pane -->
+            <div class="tab-pane fade h-100" id="tab-deai" role="tabpanel" aria-labelledby="tab-deai-btn">
+              <div style="padding:18px;">
+                <h5 class="fw-bold">去AI味儿【vip】</h5>
+                <!-- Locked view for non-VIP -->
+                <div id="deai-locked" class="mb-3">
+                  <p class="text-muted">使用此功能可以优化整篇文章，去除 AI 味，并检查设定上的 bug。该功能为 VIP 专享。</p>
+                  <div class="alert alert-warning">你当前不是 VIP，无法使用去 AI 味儿功能。</div>
+                  <button id="btn-upgrade" class="btn btn-primary">去开通</button>
+                </div>
+
+                <!-- Real De-AI UI (hidden until VIP) -->
+                <div id="deai-content" style="display:none;">
+                  <div class="alert alert-info">使用此功能可以优化一下整篇文章，去除 AI 味，检查设定上的 bug。</div>
+
+                  <div class="mb-3">
+                    <label class="form-label">从你的风格库选择：</label>
+                    <select id="style-select" class="form-select">
+                      <!-- 动态填充 -->
+                    </select>
+                  </div>
+
+                  <div id="style-preview" class="deai-preview mb-3">
+                    <div class="text-secondary">请选择一个风格以查看示例预览。</div>
+                  </div>
+
+                  <div>
+                    <button id="deai-start" class="btn btn-success">开始</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
   </main>
+
+    <!-- 大型去AI味弹窗（Diff 视图） -->
+    <div class="modal fade big-modal" id="modal-deai" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">去AI味儿</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭" id="modal-deai-close"></button>
+          </div>
+          <div class="modal-body" style="padding:12px 18px;display:flex;flex-direction:column;gap:12px;">
+            <div id="deai-current-style" class="text-muted">当前使用风格：<strong id="deai-style-name">-</strong></div>
+            <div class="diff-columns">
+              <div class="diff-column">
+                <div class="fw-bold mb-2">原文（原章节）</div>
+                <pre id="deai-original"></pre>
+              </div>
+              <div class="diff-column">
+                <div class="fw-bold mb-2">去 AI 味后（对比）</div>
+                <pre id="deai-modified"></pre>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="deai-cancel">取消</button>
+            <button type="button" class="btn btn-primary" id="deai-apply">应用</button>
+          </div>
+        </div>
+      </div>
+    </div>
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <!-- SortableJS for拖动排序 -->
@@ -243,6 +334,147 @@
     // 初始化
     renderSortableList();
     renderSelectList();
+
+    // helper: escape HTML for insertion into pre or innerHTML
+    function escapeHtml(str){
+      return String(str)
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#39;');
+    }
+
+    // --- De-AI (VIP) interaction logic ---
+    (function(){
+      // sample styles (normally would come from user's style library)
+      const userStyles = [
+        {id:'s1', name:'古风婉约体', tags:{example:true,desc:true,vocab:true,catch:false,narration:false}},
+        {id:'s2', name:'现代爽文体', tags:{example:true,desc:false,vocab:true,catch:false,narration:true}},
+        {id:'s3', name:'悬疑低调派', tags:{example:false,desc:true,vocab:false,catch:true,narration:true}}
+      ];
+      let vipEnabled = false;
+
+      const btnUpgrade = document.getElementById('btn-upgrade');
+      const deaiLocked = document.getElementById('deai-locked');
+      const deaiContent = document.getElementById('deai-content');
+      const styleSelect = document.getElementById('style-select');
+      const stylePreview = document.getElementById('style-preview');
+
+      function renderStyleOptions(){
+        styleSelect.innerHTML = '';
+        userStyles.forEach(s=>{
+          const opt = document.createElement('option');
+          opt.value = s.id; opt.textContent = s.name;
+          styleSelect.appendChild(opt);
+        });
+      }
+
+      function renderStylePreviewById(id){
+        const s = userStyles.find(x=>x.id===id);
+        if(!s){ stylePreview.innerHTML = '<div class="text-secondary">未找到风格</div>'; return; }
+        const tagsHtml = [];
+        tagsHtml.push('<span class="deai-tag ' + (s.tags.example? 'has':'missing') + '">例文 ' + (s.tags.example? '√':'×') + '</span>');
+        tagsHtml.push('<span class="deai-tag ' + (s.tags.desc? 'has':'missing') + '">风格简述 ' + (s.tags.desc? '√':'×') + '</span>');
+        tagsHtml.push('<span class="deai-tag ' + (s.tags.vocab? 'has':'missing') + '">用词习惯 ' + (s.tags.vocab? '√':'×') + '</span>');
+        tagsHtml.push('<span class="deai-tag ' + (s.tags.catch? 'has':'missing') + '">口癖 ' + (s.tags.catch? '√':'×') + '</span>');
+        tagsHtml.push('<span class="deai-tag ' + (s.tags.narration? 'has':'missing') + '">叙事手法 ' + (s.tags.narration? '√':'×') + '</span>');
+
+        stylePreview.innerHTML = '<div class="deai-style-title">' + s.name + '</div>' +
+          '<div class="deai-tags">' + tagsHtml.join('') + '</div>';
+      }
+
+      // simulate upgrade: in prototype, clicking goes through and enables VIP
+      btnUpgrade && btnUpgrade.addEventListener('click', function(){
+        // pretend user purchased VIP
+        vipEnabled = true;
+        deaiLocked.style.display = 'none';
+        deaiContent.style.display = '';
+        renderStyleOptions();
+        // auto-select first
+        if(styleSelect.options.length) styleSelect.selectedIndex = 0;
+        renderStylePreviewById(styleSelect.value);
+      });
+
+      styleSelect && styleSelect.addEventListener('change', function(){ renderStylePreviewById(this.value); });
+
+      // Start button placeholder
+      const startBtn = document.getElementById('deai-start');
+      startBtn && startBtn.addEventListener('click', function(){
+        // open big modal and populate with sample diff
+        const modalEl = document.getElementById('modal-deai');
+        const bsModal = new bootstrap.Modal(modalEl);
+          // set style name
+          const sel = document.getElementById('style-select');
+          const styleName = sel ? sel.options[sel.selectedIndex].text : '-';
+          document.getElementById('deai-style-name').textContent = styleName;
+          // generate a sample original text (~200-300 chars) for prototype
+          function generateSampleOriginal(){
+            const parts = [
+              '夜色如水，街灯把影子拉得很长，行人稀少。',
+              '他独自走在河堤上，手里握着一杯已经凉了的咖啡，呼出的白气在冬夜里很快消散。',
+              '记忆里那些零碎的画面像散落的信笺，拼不成完整的故事。',
+              '窗内的灯光使室内显得温暖而遥远，像是另一种生活的邀请。',
+              '他轻声念出一句莫名其妙的话，空气里仿佛有回音在回应。'
+            ];
+            let text = '';
+            while(text.length < 220){
+              text += parts[Math.floor(Math.random()*parts.length)];
+            }
+            return text.slice(0, 260);
+          }
+
+          const original = generateSampleOriginal();
+
+          // create a modified version with several replacements and mark changes
+          let modifiedHtml = original;
+          const replacements = [
+            ['咖啡','热茶'],
+            ['夜色','晨曦'],
+            ['行人稀少','人潮涌动'],
+            ['窗内的灯光','屋外的霓虹'],
+            ['轻声念出','高声呼喊']
+          ];
+          // apply replacements (first occurrence of each) and wrap replacement in diff-mark
+          replacements.forEach(function(pair){
+            const [from,to] = pair;
+            const idx = modifiedHtml.indexOf(from);
+            if(idx !== -1){
+              // replace only the first occurrence to mimic selective edits
+              modifiedHtml = modifiedHtml.slice(0, idx) + '<span class="diff-mark">' + escapeHtml(to) + '</span>' + modifiedHtml.slice(idx + from.length);
+            }
+          });
+
+          // set content into modal
+          document.getElementById('deai-original').textContent = original;
+          document.getElementById('deai-modified').innerHTML = modifiedHtml;
+        bsModal.show();
+      });
+
+      // modal cancel/apply/close handlers - simply hide modal (prototype)
+      const modalEl = document.getElementById('modal-deai');
+      const deaiCancel = document.getElementById('deai-cancel');
+      const deaiApply = document.getElementById('deai-apply');
+      const modalCloseBtn = document.getElementById('modal-deai-close');
+      if(deaiCancel) deaiCancel.addEventListener('click', function(){ bootstrap.Modal.getInstance(modalEl).hide(); });
+      if(modalCloseBtn) modalCloseBtn.addEventListener('click', function(){ bootstrap.Modal.getInstance(modalEl).hide(); });
+      if(deaiApply) deaiApply.addEventListener('click', function(){ bootstrap.Modal.getInstance(modalEl).hide(); });
+
+    })();
+
+    // Reset scroll on tab change to avoid showing a scrolled position in other tabs
+    (function(){
+      const tabs = document.querySelectorAll('button[data-bs-toggle="tab"]');
+      const side = document.querySelector('.side-section');
+      const tabContent = document.querySelector('.tab-content');
+      tabs.forEach(t=>{
+        t.addEventListener('shown.bs.tab', function(){
+          // scroll the side panel and tab content to top
+          if(side) side.scrollTop = 0;
+          if(tabContent) tabContent.scrollTop = 0;
+        });
+      });
+    })();
   </script>
 </body>
 
