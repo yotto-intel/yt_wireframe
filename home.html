@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>首页 - 墨斗写作</title>
+  <style>
+    html,body{height:100%;margin:0;background:#fff;color:#111;font-family:Arial, Helvetica, sans-serif}
+    /* Modal styles */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;z-index:9999}
+    .modal{background:#fff;padding:24px;border-radius:8px;max-width:520px;width:90%;box-shadow:0 8px 24px rgba(0,0,0,0.2)}
+    .modal h2{margin:0 0 12px;font-size:18px}
+    .modal p{margin:8px 0}
+    .modal .actions{display:flex;justify-content:flex-end;margin-top:16px}
+    .btn{background:#1e90ff;color:#fff;padding:8px 12px;border-radius:6px;border:none;cursor:pointer}
+    .btn.link{background:transparent;color:#1e90ff;text-decoration:underline;padding:0;margin-right:auto}
+    .close{background:#eee;color:#333}
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <!-- 首页目前不需要其他元素，背景为白色。 -->
+
+  <!-- 欢迎弹窗（仅在新用户首次访问时显示） -->
+  <div id="welcomeModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+    <div class="modal" role="document">
+      <h2 id="welcomeTitle">欢迎使用墨斗</h2>
+      <p>欢迎使用墨斗网文写作工具，墨斗是一款全流程AI辅助写小说的工具。</p>
+      <p>新注册用户每日字数上线<strong>15000字</strong>，持续3天，祝您畅快写作。</p>
+      <p>查看：<a id="tutorialLink" href="tutorial.html" target="_blank" rel="noopener noreferrer">使用教程</a></p>
+      <p>添加客服微信：coder_arthas，遇到问题随时咨询。</p>
+      <div class="actions">
+        <button id="closeBtn" class="btn close">我知道了</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      var storageKey = 'md_welcome_shown_home_v1';
+      var modal = document.getElementById('welcomeModal');
+      var closeBtn = document.getElementById('closeBtn');
+      var tutorialLink = document.getElementById('tutorialLink');
+
+      // 如果尚未展示过欢迎弹窗，则显示
+      if(!localStorage.getItem(storageKey)){
+        modal.classList.remove('hidden');
+      }
+
+      function closeModal(){
+        modal.classList.add('hidden');
+        try { localStorage.setItem(storageKey, '1'); } catch(e){}
+      }
+
+      closeBtn.addEventListener('click', closeModal);
+      // 点击遮罩层（模态外部）也可以关闭
+      modal.addEventListener('click', function(e){
+        if(e.target === modal) closeModal();
+      });
+      // Esc 键关闭
+      document.addEventListener('keydown', function(e){
+        if(e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+      });
+
+      // tutorialLink 已设置 target="_blank"，会在新标签页打开
+    })();
+  </script>
+</body>
+</html>

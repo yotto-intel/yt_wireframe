@@ -21,6 +21,9 @@
       .recommended { position: absolute; right:12px; top:12px; background:#3db8ff; color:#fff; padding:6px 10px; border-radius:999px; font-weight:600; font-size:0.85rem; }
       .card-wrap { position:relative; }
       .btn-buy { min-width:120px; }
+      .recharge-presets { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+      .preset-btn { border-radius:8px; padding:6px 10px; border:1px solid #e6e9ee; background:#fff; cursor:pointer; color:#333; font-weight:600; }
+      .preset-btn.active { background:#3db8ff; color:#fff; border-color:#3db8ff; box-shadow:0 6px 12px rgba(61,184,255,0.12); }
       @media (max-width:575px){ .price { font-size:1.2rem; } }
     </style>
   </head>
@@ -100,6 +103,35 @@
 
       </section>
 
+      <!-- Recharge Words Section -->
+      <section class="container my-4">
+        <div class="row justify-content-center">
+          <div class="col-md-8 col-lg-6">
+            <div class="card" style="border-radius:12px; border:1px solid #eef0f3; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+              <div class="card-body p-4">
+                <h4 class="mb-3 fw-bold">充值字数</h4>
+                <p class="text-muted mb-2">1 万字 = <strong>¥10</strong></p>
+                <div class="recharge-presets">
+                  <button type="button" class="preset-btn" data-units="1">1 万字</button>
+                  <button type="button" class="preset-btn" data-units="10">10 万字</button>
+                  <button type="button" class="preset-btn" data-units="50">50 万字</button>
+                  <button type="button" class="preset-btn" data-units="100">100 万字</button>
+                </div>
+                <div class="d-flex gap-2 align-items-center">
+                  <label class="form-label mb-0 me-2">充值数量：</label>
+                  <input type="number" id="rechargeUnits" class="form-control" value="1" min="1" style="width:120px;">
+                  <div class="ms-auto text-end">
+                    <div class="text-muted" style="font-size:0.9rem">合计：<span id="rechargeTotal">¥10</span></div>
+                    <button class="btn btn-primary mt-2" id="rechargeBtn">立即充值</button>
+                  </div>
+                </div>
+                <small class="text-muted d-block mt-3">示例：点击预设或自行填写数量（单位：万字）。</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section> 
+
       <!-- Invite Rewards Section -->
       <section class="container my-5">
         <div class="row justify-content-center">
@@ -173,6 +205,70 @@
           this.classList.remove('disabled');
         }, 2000);
       });
+
+      // Recharge words handler (with preset buttons)
+      (function(){
+        var unitInput = document.getElementById('rechargeUnits');
+        var totalEl = document.getElementById('rechargeTotal');
+        var rechargeBtn = document.getElementById('rechargeBtn');
+        var presetBtns = document.querySelectorAll('.preset-btn');
+        var pricePerUnit = 10; // ¥10 per 1万字
+
+        function setActivePreset(units){
+          presetBtns.forEach(btn => {
+            if(parseInt(btn.dataset.units, 10) === units){
+              btn.classList.add('active');
+            } else {
+              btn.classList.remove('active');
+            }
+          });
+        }
+
+        function updateTotal(){
+          var units = Math.max(1, parseInt(unitInput.value || '1', 10));
+          totalEl.textContent = '¥' + (units * pricePerUnit);
+          // Toggle active preset if matching
+          var matched = false;
+          presetBtns.forEach(btn => {
+            if(parseInt(btn.dataset.units, 10) === units){ matched = true; btn.classList.add('active'); } else { btn.classList.remove('active'); }
+          });
+          if(!matched){ presetBtns.forEach(btn => btn.classList.remove('active')); }
+        }
+
+        // Preset button handlers
+        if(presetBtns.length){
+          presetBtns.forEach(btn => {
+            btn.addEventListener('click', function(){
+              var units = Math.max(1, parseInt(this.dataset.units || '1', 10));
+              unitInput.value = units;
+              updateTotal();
+              setActivePreset(units);
+            });
+          });
+        }
+
+        if(unitInput){
+          unitInput.addEventListener('input', function(){
+            // If user types, de-select presets unless value matches one
+            updateTotal();
+          });
+          updateTotal();
+        }
+
+        if(rechargeBtn){
+          rechargeBtn.addEventListener('click', function(){
+            var units = Math.max(1, parseInt(unitInput.value || '1', 10));
+            var amount = units * pricePerUnit;
+            if(confirm('确认充值 ' + units + ' 万字，需支付 ¥' + amount + ' ?')){
+              // Placeholder: call recharge API here
+              alert('充值成功（示例），已到账 ' + (units*10000) + ' 字。');
+            }
+          });
+        }
+
+        // Initialize selected preset
+        if(unitInput) setActivePreset(Math.max(1, parseInt(unitInput.value || '1', 10)));
+      })();
     </script>
   </body>
 </html>
