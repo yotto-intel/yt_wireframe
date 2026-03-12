@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <title>AI拆书页面 - 设定</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #f7f8fa;
+    }
+
+    .container-fluid {
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar {
+      flex: 0 0 20%;
+      background: #fff;
+      border-right: 1px solid #eee;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .middle {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .right {
+      flex: 0 0 40%;
+      padding: 20px;
+      overflow-y: auto;
+      background: #fff;
+      border-left: 1px solid #eee;
+    }
+
+    /* when right panel is hidden, middle should take full remaining space */
+    .no-right .middle {
+      flex: 1 0 80%;
+    }
+    .no-right .right {
+      display: none;
+    }
+
+    .nav-buttons .btn {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .chapter-list {
+      margin-top: 20px;
+    }
+
+    .chapter-list .chapter-item {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 6px;
+      cursor: pointer;
+    }
+
+    /* 修改后以绿色高亮显示 */
+    .diff {
+      background: #e6ffed;
+    }
+  </style>
+</head>
+<body>
+<div class="container-fluid">
+  <!-- 左侧导航栏 -->
+  <div class="sidebar">
+    <div class="nav-buttons">
+      <button class="btn btn-outline-primary">设定</button>
+      <button class="btn btn-outline-primary">大纲</button>
+      <button class="btn btn-outline-primary">细纲</button>
+      <button class="btn btn-primary mt-3">生成章节</button>
+    </div>
+
+    <div class="chapter-list">
+      <h5>章节列表</h5>
+      <div class="chapter-item">第1章 ...</div>
+      <div class="chapter-item">第2章 ...</div>
+      <div class="chapter-item">第3章 ...</div>
+      <!-- 更多章节 -->
+    </div>
+  </div>
+
+  <!-- 中间展示区 -->
+  <div class="middle" id="main-area">
+    <!-- 设定页面视图 -->
+    <div id="view-settings">
+      <div class="d-flex justify-content-end mb-2">
+        <button class="btn btn-success" id="btn-reanalyze">重新分析小说</button>
+      </div>
+      <h2>小说名称</h2>
+      <p><strong>小说类型：</strong>玄幻</p>
+      <p><strong>目标读者：</strong>年轻群体</p>
+
+      <h4>主角</h4>
+      <p>主角相关信息展示在这里。</p>
+
+      <h4>配角</h4>
+      <p>配角相关信息展示在这里。</p>
+
+      <h4>世界观</h4>
+      <p>世界观内容展示。</p>
+    </div>
+
+    <!-- 大纲页面视图 -->
+    <div id="view-outline" class="d-none">
+      <div class="d-flex justify-content-end mb-2">
+        <button class="btn btn-success" id="btn-save-outline">保存</button>
+      </div>
+      <div class="mb-3">
+        <textarea class="form-control" rows="20" placeholder="在此撰写大纲..."></textarea>
+      </div>
+    </div>
+
+    <!-- 细纲页面视图 -->
+    <div id="view-fineoutline" class="d-none">
+      <div class="d-flex justify-content-between mb-2">
+        <button class="btn btn-secondary" id="btn-fine-prev">上一页</button>
+        <button class="btn btn-primary" id="btn-fine-generate">生成章节</button>
+        <button class="btn btn-secondary" id="btn-fine-next">下一页</button>
+      </div>
+      <ul class="list-group" id="fine-list">
+        <li class="list-group-item">细纲条目1</li>
+        <li class="list-group-item">细纲条目2</li>
+        <li class="list-group-item">细纲条目3</li>
+      </ul>
+      <nav aria-label="Page navigation" class="d-flex justify-content-center mt-2">
+        <ul class="pagination">
+          <li class="page-item"><a class="page-link" href="#">上一页</a></li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">下一页</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- 章节编辑视图 -->
+    <div id="view-chapter" class="d-none">
+      <div class="d-flex justify-content-end mb-2">
+        <button class="btn btn-success" id="btn-save-chapter">保存章节</button>
+      </div>
+      <textarea class="form-control" rows="20" placeholder="在此编辑章节内容..."></textarea>
+    </div>
+  </div>
+
+  <!-- 右侧编辑区 -->
+  <div class="right" id="right-panel">
+    <div class="d-flex justify-content-end mb-2">
+      <button class="btn btn-success" id="btn-save-settings">保存</button>
+    </div>
+    <h2>可编辑设定</h2>
+    <div class="mb-3">
+      <label class="form-label">小说名称</label>
+      <input type="text" class="form-control diff" value="小说名称">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">小说类型</label>
+      <input type="text" class="form-control diff" value="玄幻">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">目标读者</label>
+      <input type="text" class="form-control diff" value="年轻群体">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">主角信息</label>
+      <textarea class="form-control diff" rows="3">主角相关信息展示在这里。</textarea>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">配角信息</label>
+      <textarea class="form-control diff" rows="3">配角相关信息展示在这里。</textarea>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">世界观</label>
+      <textarea class="form-control diff" rows="3">世界观内容展示。</textarea>
+    </div>
+  </div>
+</div>
+
+  <!-- 生成章节弹窗 -->
+  <div class="modal fade" id="modal-generate" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">生成章节</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p>小说总章节：<span id="total-chapters">xxx</span>章；</p>
+          <p>已生成章节：<span id="generated-chapters">xx</span>章；</p>
+          <div class="mb-3">
+            <label class="form-label">本次生成：</label>
+            <input type="number" class="form-control" id="input-gen-count" value="1"> 章
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" id="confirm-generate">确定</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 生成进度提示弹窗 -->
+  <div class="modal fade" id="modal-progress" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">章节生成中</h5>
+        </div>
+        <div class="modal-body">
+          <p id="progress-text">章节内容生成中 x/y ......</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancel-progress">取消</button>
+          <button type="button" class="btn btn-link" id="hide-progress">隐藏</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS (needed for modals and components) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    (function(){
+      const sidebar = document.querySelector('.sidebar');
+      const mainArea = document.getElementById('main-area');
+      const rightPanel = document.getElementById('right-panel');
+      const container = document.querySelector('.container-fluid');
+
+      const views = {
+        settings: document.getElementById('view-settings'),
+        outline: document.getElementById('view-outline'),
+        fineoutline: document.getElementById('view-fineoutline'),
+        chapter: document.getElementById('view-chapter')
+      };
+
+      function showView(name) {
+        Object.values(views).forEach(v => v.classList.add('d-none'));
+        views[name].classList.remove('d-none');
+      }
+
+      function activateNav(index) {
+        const buttons = sidebar.querySelectorAll('.nav-buttons .btn');
+        buttons.forEach((b,i) => b.classList.toggle('active', i===index));
+      }
+
+      // nav button handlers
+      const btns = sidebar.querySelectorAll('.nav-buttons .btn');
+      btns[0].addEventListener('click', ()=>{ showView('settings'); activateNav(0); container.classList.remove('no-right'); });
+      btns[1].addEventListener('click', ()=>{ showView('outline'); activateNav(1); container.classList.add('no-right'); });
+      btns[2].addEventListener('click', ()=>{ showView('fineoutline'); activateNav(2); container.classList.add('no-right'); });
+      btns[3].addEventListener('click', ()=>{ /* open generate modal */
+          new bootstrap.Modal(document.getElementById('modal-generate')).show();
+      });
+
+      // chapter list click
+      document.querySelectorAll('.chapter-list .chapter-item').forEach(item=>{
+        item.addEventListener('click', ()=>{
+          showView('chapter');
+          activateNav(-1);
+          container.classList.add('no-right');
+        });
+      });
+
+      // generate modal logic
+      const modalGenerate = document.getElementById('modal-generate');
+      const modalProgress = new bootstrap.Modal(document.getElementById('modal-progress'));
+      document.getElementById('btn-save-outline')?.addEventListener('click', ()=>{
+        alert('大纲已保存');
+      });
+      // pagination placeholders for细纲
+      document.getElementById('btn-fine-prev').addEventListener('click', ()=>{ /* 上一页逻辑 */ });
+      document.getElementById('btn-fine-next').addEventListener('click', ()=>{ /* 下一页逻辑 */ });
+
+      document.getElementById('confirm-generate').addEventListener('click', ()=>{
+        bootstrap.Modal.getInstance(modalGenerate).hide();
+        modalProgress.show();
+        // simulate progress
+        let total = parseInt(document.getElementById('input-gen-count').value,10);
+        let done = 0;
+        const progressText = document.getElementById('progress-text');
+        function step(){
+          if(done<total){
+            done++;
+            progressText.textContent = `章节内容生成中 ${done}/${total} ......`;
+            setTimeout(step, 500);
+          } else {
+            // finished
+            document.getElementById('cancel-progress').disabled = false;
+          }
+        }
+        document.getElementById('cancel-progress').disabled = true;
+        step();
+      });
+      document.getElementById('hide-progress').addEventListener('click', ()=>{
+        modalProgress.hide();
+        btns[3].disabled = true;
+        btns[3].textContent = '章节生成中';
+      });
+
+      // initial activate
+      showView('settings');
+      activateNav(0);
+    })();
+  </script>
+</html>

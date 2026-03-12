@@ -16,10 +16,58 @@
     .btn.link{background:transparent;color:#1e90ff;text-decoration:underline;padding:0;margin-right:auto}
     .close{background:#eee;color:#333}
     .hidden{display:none}
+    /* Card styles */
+    .cards-container{display:flex;gap:20px;padding:20px;flex-wrap:wrap}
+    .card{width:200px;border-radius:8px;overflow:hidden;box-shadow:0 4px 8px rgba(0,0,0,0.1);cursor:pointer}
+    .card.new-novel{background:#f0f0f0;display:flex;align-items:center;justify-content:center;height:150px;font-size:24px;color:#666}
+    .card.in-progress, .card.analyzing{display:flex;flex-direction:column}
+    .cover{height:100px;background:#ddd;display:flex;align-items:center;justify-content:center}
+    .analyzing .cover{background:#eee;color:#999}
+    .info{padding:10px}
+    .info h3{margin:0;font-size:16px}
+    .info p{margin:5px 0;font-size:14px;color:#666}
+    /* Analyzed card */
+    .card.analyzed .cover{background:#cfe8ff;color:#096;display:flex;align-items:center;justify-content:center;font-size:14px}
+    .card.analyzed .card-buttons{display:flex;gap:8px;padding:10px}
+    .card.analyzed .card-buttons .btn{flex:1;font-size:14px;}
   </style>
 </head>
 <body>
   <!-- 首页目前不需要其他元素，背景为白色。 -->
+
+  <div class="cards-container">
+    <div class="card new-novel">
+      +新建小说
+    </div>
+    <div class="card in-progress">
+      <div class="cover"></div>
+      <div class="info">
+        <h3>小说名字</h3>
+        <p>章节字数：10章</p>
+        <p>最后编辑时间：2023-10-01</p>
+      </div>
+    </div>
+    <div class="card analyzing">
+      <div class="cover">AI分析设定中...</div>
+      <div class="info">
+        <h3>小说名字</h3>
+        <p>章节字数：5章</p>
+        <p>最后编辑时间：2023-10-02</p>
+      </div>
+    </div>
+    <div class="card analyzed">
+      <div class="cover">分析完成</div>
+      <div class="info">
+        <h3>小说名字</h3>
+        <p>章节字数：5章</p>
+        <p>最后编辑时间：2023-10-02</p>
+      </div>
+      <div class="card-buttons">
+        <button class="btn">详情</button>
+        <button class="btn">沉浸阅读</button>
+      </div>
+    </div>
+  </div>
 
   <!-- 欢迎弹窗（仅在新用户首次访问时显示） -->
   <div id="welcomeModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
